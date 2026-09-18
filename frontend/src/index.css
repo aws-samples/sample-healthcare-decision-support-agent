@@ -1,0 +1,262 @@
+/* Google Fonts - Clinical Typography System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+/* Clinical Precision Design System */
+@theme {
+  /* Fonts - Inter for modern clinical UI */
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", Consolas, monospace;
+}
+
+/* Light Mode (Default) - Cool, Clinical, Professional */
+:root,
+html.light {
+  /* Background colors - Cool clinical whites */
+  --color-bg-primary: #FAFAFA;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F4F4F5;
+  --color-bg-elevated: #FFFFFF;
+
+  /* Text colors - High contrast, cool */
+  --color-text-primary: #18181B;
+  --color-text-secondary: #3F3F46;
+  --color-text-muted: #71717A;
+
+  /* Accent colors - Medical teal/emerald */
+  --color-accent-primary: #0D9488;
+  --color-accent-primary-hover: #0F766E;
+  --color-accent-secondary: #059669;
+
+  /* Urgency colors - Clear, high-contrast */
+  --color-urgent: #DC2626;
+  --color-urgent-bg: #FEF2F2;
+  --color-warning: #B45309;
+  --color-warning-bg: #FFFBEB;
+  --color-info: #0369A1;
+  --color-info-bg: #F0F9FF;
+  --color-success: #15803D;
+  --color-success-bg: #F0FDF4;
+
+  /* Category colors - Refined for light mode */
+  --color-category-standard: #6D28D9;
+  --color-category-gap: #BE185D;
+  --color-category-risk: #C2410C;
+  --color-category-preventive: #15803D;
+  --color-category-medication: #0E7490;
+
+  /* Border colors - Cool */
+  --color-border: #E4E4E7;
+  --color-border-light: #D4D4D8;
+
+  /* Card styling for light mode - subtle depth */
+  --glass-bg: #FFFFFF;
+  --glass-border: rgba(28, 25, 23, 0.08);
+  --card-shadow: 0 1px 3px rgba(28, 25, 23, 0.06), 0 1px 2px rgba(28, 25, 23, 0.04);
+  --card-shadow-hover: 0 4px 12px rgba(28, 25, 23, 0.08), 0 2px 4px rgba(28, 25, 23, 0.04);
+}
+
+/* Dark Mode - Deep, professional */
+html.dark {
+  /* Background colors - Deep slate with warm undertone */
+  --color-bg-primary: #0C0A09;
+  --color-bg-secondary: #1C1917;
+  --color-bg-tertiary: #292524;
+  --color-bg-elevated: #1C1917;
+
+  /* Text colors */
+  --color-text-primary: #FAFAF9;
+  --color-text-secondary: #A8A29E;
+  --color-text-muted: #78716C;
+
+  /* Accent colors */
+  --color-accent-primary: #2DD4BF;
+  --color-accent-primary-hover: #14B8A6;
+  --color-accent-secondary: #34D399;
+
+  /* Urgency colors */
+  --color-urgent: #F87171;
+  --color-urgent-bg: rgba(220, 38, 38, 0.15);
+  --color-warning: #FBBF24;
+  --color-warning-bg: rgba(180, 83, 9, 0.15);
+  --color-info: #38BDF8;
+  --color-info-bg: rgba(3, 105, 161, 0.15);
+  --color-success: #4ADE80;
+  --color-success-bg: rgba(21, 128, 61, 0.15);
+
+  /* Category colors */
+  --color-category-standard: #A78BFA;
+  --color-category-gap: #F472B6;
+  --color-category-risk: #FB923C;
+  --color-category-preventive: #4ADE80;
+  --color-category-medication: #22D3EE;
+
+  /* Border colors */
+  --color-border: #292524;
+  --color-border-light: #44403C;
+
+  /* Card styling for dark mode */
+  --glass-bg: #1C1917;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Base styles */
+html {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  letter-spacing: -0.005em;
+}
+
+html.dark body {
+  background: var(--color-bg-primary);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-light);
+}
+
+/* Utility classes */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Clinical Card */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.glass-card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Collapsible section styles */
+.collapsible-section {
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease;
+}
+
+.collapsible-header {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.collapsible-header:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+/* Pulse animation for loading */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* Heartbeat animation */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.1); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.1); }
+  70% { transform: scale(1); }
+}
+
+.heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* Status indicator dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-active {
+  background: var(--color-success);
+  box-shadow: 0 0 8px var(--color-success);
+}
+
+.status-resolved {
+  background: var(--color-text-muted);
+}
+
+/* Button press micro-interactions */
+button {
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Interactive card press effect */
+.glass-card button:active,
+button.glass-card:active {
+  transform: scale(0.985);
+}
+
+/* Nav button press effect */
+nav button:active {
+  transform: scale(0.95);
+}
+
+/* Patient card press effect */
+.patient-card:active {
+  transform: scale(0.98);
+  box-shadow: var(--card-shadow);
+}

@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Vite cache
+.vite/
+
+# Test results
+test-results/
+playwright-report/
+
+# IDE
+.idea/
+*.sw?
+
+# OS
+.DS_Store

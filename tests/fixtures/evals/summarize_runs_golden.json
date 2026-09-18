@@ -1,0 +1,75 @@
+{
+  "dataset_version": "golden-v1",
+  "generator_model_id": "gen",
+  "entailment_model_id": "ent",
+  "configured_read_timeout": 120,
+  "retained_run_transport": {
+    "read_timeout": 120
+  },
+  "provenance_notes": [
+    "note"
+  ],
+  "patients": 2,
+  "completed": 1,
+  "median_latency_ms": 100,
+  "measured_latency_patients": 1,
+  "tokens": {
+    "input_tokens": 10,
+    "output_tokens": 20,
+    "cache_read_input_tokens": 5,
+    "cache_write_input_tokens": 0
+  },
+  "measured_token_patients": 0,
+  "estimated_generator_cost_usd": 0.0003315,
+  "cost_scope": "Generator trace tokens only; excludes entailment calls, judge calls, and infrastructure.",
+  "pricing_basis": "list",
+  "candidate_nudges": 2,
+  "excluded_nudges": 1,
+  "source_recorded_excluded_nudges": 4,
+  "reconciled_missing_citation_exclusions": 1,
+  "eligible_nudges": 1,
+  "patients_with_eligible_nudges": 1,
+  "layer2": {
+    "citation_resolution": {
+      "satisfies_contract": 1,
+      "violates_contract": 0,
+      "abstain_insufficient_evidence": 0,
+      "not_applicable": 0
+    },
+    "cited_passage_identity": {
+      "satisfies_contract": 1,
+      "violates_contract": 0,
+      "abstain_insufficient_evidence": 0,
+      "not_applicable": 0
+    },
+    "medication_status": {
+      "satisfies_contract": 0,
+      "violates_contract": 0,
+      "abstain_insufficient_evidence": 0,
+      "not_applicable": 1
+    },
+    "absence_within_coverage": {
+      "satisfies_contract": 0,
+      "violates_contract": 0,
+      "abstain_insufficient_evidence": 0,
+      "not_applicable": 1
+    },
+    "redundant_order": {
+      "satisfies_contract": 0,
+      "violates_contract": 0,
+      "abstain_insufficient_evidence": 0,
+      "not_applicable": 1
+    }
+  },
+  "additional_contract_failures": {},
+  "nudge_verdicts": {
+    "satisfies_contract": 0,
+    "violates_contract": 0,
+    "abstain_insufficient_evidence": 1
+  },
+  "no_violation_count": 1,
+  "all_nudges_have_no_violation": true,
+  "steering_retries": 2,
+  "verification_error_patients": 1,
+  "note": "Abstentions and non-applicable checks are separate. No clinical-validity claim."
+}

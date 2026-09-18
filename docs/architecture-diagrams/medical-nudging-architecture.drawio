@@ -1,0 +1,273 @@
+<mxfile host="app.diagrams.net" modified="2025-01-09T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+  <diagram name="Medical Nudging Pilot Architecture" id="medical-nudging-arch">
+    <mxGraphModel dx="1434" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title" value="Medical Nudging Pilot - Clinical Decision Support System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Patient Clinical Data Section -->
+        <mxCell id="input-group" value="Patient Clinical Data" style="swimlane;horizontal=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="200" height="180" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ccda-xml" value="&lt;b&gt;CCDA XML&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Clinical Patient Records&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="input-group">
+          <mxGeometry x="20" y="50" width="70" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fhir-json" value="&lt;b&gt;FHIR JSON&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Healthcare Data&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="input-group">
+          <mxGeometry x="110" y="50" width="70" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Amazon Bedrock AgentCore Runtime -->
+        <mxCell id="agentcore-group" value="" style="swimlane;horizontal=1;startSize=0;fillColor=#FFE4B3;strokeColor=#FF9900;strokeWidth=3;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="80" width="420" height="340" as="geometry" />
+        </mxCell>
+
+        <mxCell id="agentcore-title" value="&lt;b&gt;Amazon Bedrock AgentCore Runtime&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Secure, Serverless Agent Hosting&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="agentcore-group">
+          <mxGeometry x="10" y="10" width="400" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="strands-agents" value="&lt;b&gt;Strands Agents Framework&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Agent Orchestration&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="agentcore-group">
+          <mxGeometry x="30" y="60" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="claude-sonnet" value="&lt;b&gt;Claude Sonnet 4.5&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Foundation Model via&lt;br&gt;Amazon Bedrock&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="agentcore-group">
+          <mxGeometry x="220" y="60" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Agent Tools Box -->
+        <mxCell id="tools-group" value="Agent Tools" style="swimlane;horizontal=1;startSize=25;fillColor=#ffffff;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="agentcore-group">
+          <mxGeometry x="30" y="140" width="350" height="180" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tool-get-patient" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;get_patient_data&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Parses CCDA/FHIR&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="tools-group">
+          <mxGeometry x="20" y="35" width="140" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tool-search" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;search_guidelines&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Queries OpenSearch&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="tools-group">
+          <mxGeometry x="185" y="35" width="140" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tool-list" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;list_guidelines&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Guideline Catalog&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="tools-group">
+          <mxGeometry x="20" y="105" width="140" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="tool-subagent" value="&lt;b&gt;&lt;font face=&quot;Courier New&quot;&gt;invoke_subagent&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Task Delegation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="tools-group">
+          <mxGeometry x="185" y="105" width="140" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Storage & Search Section -->
+        <mxCell id="storage-group" value="Storage &amp; Search" style="swimlane;horizontal=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="220" width="200" height="220" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3-guidelines" value="&lt;b&gt;Amazon S3&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Guidelines Bucket&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="storage-group">
+          <mxGeometry x="60" y="40" width="80" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="opensearch" value="&lt;b&gt;Amazon OpenSearch&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Serverless&lt;br&gt;Guidelines Index&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="storage-group">
+          <mxGeometry x="40" y="130" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow from S3 to OpenSearch -->
+        <mxCell id="s3-to-opensearch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;" edge="1" parent="storage-group" source="s3-guidelines" target="opensearch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Guideline Ingestion Pipeline -->
+        <mxCell id="ingestion-group" value="Guideline Ingestion Pipeline" style="swimlane;horizontal=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="80" width="540" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pdf-icon" value="&lt;b&gt;PDF&lt;/b&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="ingestion-group">
+          <mxGeometry x="20" y="45" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3-upload" value="&lt;b&gt;Amazon S3&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;PDF Upload&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="ingestion-group">
+          <mxGeometry x="110" y="45" width="70" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sns" value="&lt;b&gt;Amazon SNS&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;guidelines-ingestion&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="ingestion-group">
+          <mxGeometry x="210" y="45" width="90" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lambda" value="&lt;b&gt;AWS Lambda&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;PDF Parser &amp;amp; Indexer&lt;br&gt;(3GB, 15min)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="ingestion-group">
+          <mxGeometry x="330" y="40" width="100" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="opensearch-ingestion" value="&lt;b&gt;Amazon OpenSearch&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Serverless&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="ingestion-group">
+          <mxGeometry x="455" y="45" width="70" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Ingestion Pipeline Arrows -->
+        <mxCell id="pdf-to-s3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="ingestion-group" source="pdf-icon" target="s3-upload">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3-to-sns" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="ingestion-group" source="s3-upload" target="sns">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sns-to-lambda" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="ingestion-group" source="sns" target="lambda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lambda-to-os" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="ingestion-group" source="lambda" target="opensearch-ingestion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Build & Deployment Pipeline -->
+        <mxCell id="build-group" value="Build &amp; Deployment Pipeline" style="swimlane;horizontal=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="380" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="s3-source" value="&lt;b&gt;Amazon S3&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Agent Source&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="build-group">
+          <mxGeometry x="20" y="45" width="80" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="codebuild" value="&lt;b&gt;AWS CodeBuild&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Docker Image Builder&lt;br&gt;(ARM64)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="build-group">
+          <mxGeometry x="130" y="40" width="110" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ecr" value="&lt;b&gt;Amazon ECR&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Agent Container&lt;br&gt;Registry&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="build-group">
+          <mxGeometry x="270" y="40" width="90" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Build Pipeline Arrows -->
+        <mxCell id="s3-to-codebuild" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="build-group" source="s3-source" target="codebuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="codebuild-to-ecr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="build-group" source="codebuild" target="ecr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Observability Layer -->
+        <mxCell id="observability-group" value="Observability Layer" style="swimlane;horizontal=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="480" width="500" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cw-logs" value="&lt;b&gt;Amazon CloudWatch&lt;br&gt;Logs&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Log Groups&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="observability-group">
+          <mxGeometry x="20" y="40" width="100" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cw-metrics" value="&lt;b&gt;Amazon CloudWatch&lt;br&gt;Metrics&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:8px&quot;&gt;MedicalNudging&lt;br&gt;Namespace&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="observability-group">
+          <mxGeometry x="140" y="40" width="100" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cw-dashboard" value="&lt;b&gt;Amazon CloudWatch&lt;br&gt;Dashboard&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Real-time&lt;br&gt;Visualization&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="observability-group">
+          <mxGeometry x="260" y="40" width="100" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="xray" value="&lt;b&gt;AWS X-Ray&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Distributed&lt;br&gt;Tracing&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="observability-group">
+          <mxGeometry x="380" y="40" width="100" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Identity & Access -->
+        <mxCell id="iam-group" value="Identity &amp; Access" style="swimlane;horizontal=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="480" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="iam" value="&lt;b&gt;AWS IAM&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px&quot;&gt;Agent Execution Role&lt;br&gt;CodeBuild Service Role&lt;br&gt;Lambda Execution Role&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="iam-group">
+          <mxGeometry x="20" y="40" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- NudgeResponse Output -->
+        <mxCell id="output-group" value="NudgeResponse" style="swimlane;horizontal=1;startSize=25;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="280" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="nudge-response" value="&lt;font style=&quot;font-size:10px&quot;&gt;• Patient Summary&lt;br&gt;• Clinical Nudges&lt;br&gt;&amp;nbsp; (with urgency levels)&lt;br&gt;• Guideline Citations&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#666666;align=left;spacingLeft=10;" vertex="1" parent="output-group">
+          <mxGeometry x="20" y="35" width="140" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Arrow Legend -->
+        <mxCell id="legend-group" value="Arrow Legend" style="swimlane;horizontal=1;startSize=25;fillColor=#ffffff;strokeColor=#666666;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="480" width="180" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-data" value="Data Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="legend-group">
+          <mxGeometry x="70" y="35" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-data-arrow" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="legend-group">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="15" y="45" as="sourcePoint" />
+            <mxPoint x="60" y="45" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="legend-bidir" value="Bidirectional (R/W)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="legend-group">
+          <mxGeometry x="70" y="60" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-bidir-arrow" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="legend-group">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="15" y="70" as="sourcePoint" />
+            <mxPoint x="60" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="legend-deploy" value="Deploy / Monitor" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="legend-group">
+          <mxGeometry x="70" y="85" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-deploy-arrow" style="endArrow=classic;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;" edge="1" parent="legend-group">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="15" y="95" as="sourcePoint" />
+            <mxPoint x="60" y="95" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Main Data Flow Arrows -->
+        <!-- Input to AgentCore -->
+        <mxCell id="input-to-agentcore" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="input-group" target="agentcore-group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- AgentCore to Storage (bidirectional) -->
+        <mxCell id="agentcore-to-storage" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;startArrow=classic;endArrow=classic;" edge="1" parent="1" source="agentcore-group" target="storage-group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- AgentCore to Output -->
+        <mxCell id="agentcore-to-output" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="agentcore-group" target="output-group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="335" />
+              <mxPoint x="760" y="345" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ECR to AgentCore (dashed deployment) -->
+        <mxCell id="ecr-to-agentcore" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="build-group" target="agentcore-group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="230" y="450" />
+              <mxPoint x="280" y="450" />
+              <mxPoint x="280" y="420" />
+              <mxPoint x="510" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- AgentCore to Observability (dashed) -->
+        <mxCell id="agentcore-to-observability" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="agentcore-group" target="observability-group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Observability to IAM (dashed) -->
+        <mxCell id="observability-to-iam" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=1;dashed=1;" edge="1" parent="1" source="observability-group" target="iam-group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

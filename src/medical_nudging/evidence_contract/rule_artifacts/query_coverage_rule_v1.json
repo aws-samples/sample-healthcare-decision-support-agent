@@ -1,0 +1,37 @@
+{
+  "rule_version": "coverage-v1",
+  "rule_name": "absence-within-recorded-query-coverage",
+  "description": "Declares, per absence-claim category, which resource-type queries must appear in the recorded query coverage before absence may be treated as established (decisions 16 and 20). The deterministic verifier proves 'queries Q were executed and returned no matching resource', never 'the condition does not exist'.",
+  "categories": {
+    "medication_absence": {
+      "required_resource_types": [
+        "MedicationRequest",
+        "MedicationStatement",
+        "MedicationDispense",
+        "MedicationAdministration"
+      ],
+      "keywords": ["not on", "no medication", "not prescribed", "not receiving", "off"]
+    },
+    "condition_absence": {
+      "required_resource_types": ["Condition", "Encounter"],
+      "keywords": ["no history of", "no diagnosis", "absence of", "no evidence of"]
+    },
+    "allergy_absence": {
+      "required_resource_types": ["AllergyIntolerance"],
+      "keywords": ["no allergy", "no known allergies", "no documented allergy"]
+    },
+    "observation_absence": {
+      "required_resource_types": ["Observation"],
+      "keywords": ["not measured", "no result", "never checked", "no lab"]
+    },
+    "procedure_absence": {
+      "required_resource_types": ["Procedure"],
+      "keywords": ["not performed", "no procedure", "has not undergone"]
+    }
+  },
+  "uncategorised_absence_result": "not_evaluable",
+  "notes": [
+    "An absence claim whose category cannot be determined is 'not_evaluable', which drives abstention rather than a violation.",
+    "Coverage is satisfied only when every required resource type appears in the recorded queries_executed set."
+  ]
+}

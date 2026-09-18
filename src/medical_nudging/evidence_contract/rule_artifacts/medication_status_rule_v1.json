@@ -1,0 +1,46 @@
+{
+  "rule_version": "medstatus-v1",
+  "rule_name": "dispense/administration/statement medication status interpretation",
+  "description": "Codified rule making medication status deterministic (decision 16). Medication status is deterministic only relative to this artifact; a claim of active or discontinued medication is verifiable only by replaying these mappings over raw FHIR medication resources. The rule interprets recorded documentation, not clinical reality.",
+  "resource_precedence": [
+    "MedicationAdministration",
+    "MedicationDispense",
+    "MedicationStatement",
+    "MedicationRequest"
+  ],
+  "status_mappings": {
+    "MedicationAdministration": {
+      "active": ["in-progress", "completed"],
+      "not_active": ["not-done", "stopped", "entered-in-error"],
+      "indeterminate": ["on-hold", "unknown"]
+    },
+    "MedicationDispense": {
+      "active": ["in-progress", "completed"],
+      "not_active": ["cancelled", "declined", "entered-in-error", "stopped"],
+      "indeterminate": ["preparation", "on-hold", "unknown"]
+    },
+    "MedicationStatement": {
+      "active": ["active", "intended"],
+      "not_active": ["completed", "stopped", "not-taken", "entered-in-error"],
+      "indeterminate": ["on-hold", "unknown", "recorded", "draft"]
+    },
+    "MedicationRequest": {
+      "active": ["active"],
+      "not_active": ["cancelled", "completed", "stopped", "ended", "entered-in-error"],
+      "indeterminate": ["on-hold", "draft", "unknown"]
+    }
+  },
+  "recency_window_days": {
+    "MedicationAdministration": 7,
+    "MedicationDispense": 90,
+    "MedicationStatement": 180,
+    "MedicationRequest": 180
+  },
+  "unmapped_status_result": "indeterminate",
+  "missing_date_result": "indeterminate",
+  "notes": [
+    "A resource whose effective date falls outside its recency window yields 'indeterminate', never 'not_active': stale documentation does not establish discontinuation.",
+    "An unmapped or absent status yields 'indeterminate' so that missing evidence produces abstention rather than a violation (decision 20).",
+    "Precedence resolves conflicts: the highest-precedence resource with a determinate result wins."
+  ]
+}

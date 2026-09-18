@@ -1,0 +1,79 @@
+version: 0.2
+
+# Candidate-acceptance gate.
+#
+# Runs after the agent image build and the AgentCore runtime deployment. It replays
+# the frozen regression dataset against the candidate runtime, applies the frozen
+# deterministic evaluator set and thresholds, records AgentCore evaluator trend
+# signals, and fails the build when a threshold regresses. A delivery pipeline
+# places this step before promotion or traffic routing; this repository does not
+# ship a complete CodePipeline.
+#
+# Environment (set on the CodeBuild project; override per build to run the
+# known-bad fixture):
+#   AGENT_RUNTIME_ARN            candidate runtime
+#   GATE_CONFIG                  arm config (model/agent/generator_config)
+#   GATE_THRESHOLDS              frozen thresholds JSON
+#   GATE_DATASET_ID/VERSION      pinned AgentCore dataset version (preferred)
+#   GATE_DATASET_FILE            checked-in dataset fallback
+#   GATE_EVALUATORS              space-separated AgentCore evaluator ids
+#   GATE_REPLAY_RECORDS          when set, score this records file instead of invoking
+#   GATE_BUNDLE_ID/VERSION       configuration bundle version the candidate must apply
+#                                (the prompt under test; recorded next to the runtime version)
+#   GATE_CONCURRENCY, GATE_EVALUATION_DELAY_SECONDS
+
+env:
+  variables:
+    UV_LINK_MODE: copy
+    UV_PYTHON: "3.12"
+
+phases:
+  install:
+    commands:
+      - echo "=== Install Phase ==="
+      - curl -LsSf https://astral.sh/uv/install.sh | sh
+      - export PATH="$HOME/.local/bin:$PATH"
+      - uv --version
+      - uv python install 3.12
+      - uv sync --frozen --extra evals
+
+  build:
+    commands:
+      - echo "=== Candidate acceptance gate ==="
+      - export PATH="$HOME/.local/bin:$PATH"
+      - mkdir -p /tmp/candidate-gate
+      - |
+        set -eu
+        COMMON="--config $GATE_CONFIG --thresholds $GATE_THRESHOLDS --output-dir /tmp/candidate-gate --region $AWS_DEFAULT_REGION"
+        if [ -n "${GATE_BUNDLE_ID:-}" ]; then
+          echo "Prompt under test: configuration bundle $GATE_BUNDLE_ID version $GATE_BUNDLE_VERSION"
+          COMMON="$COMMON --bundle-id $GATE_BUNDLE_ID --bundle-version $GATE_BUNDLE_VERSION"
+        fi
+        if [ -n "${GATE_REPLAY_RECORDS:-}" ]; then
+          echo "Replay mode: scoring $GATE_REPLAY_RECORDS (no runtime invocations)"
+          uv run python -m evals.agentcore_gate $COMMON --replay-records "$GATE_REPLAY_RECORDS"
+        elif [ -n "${GATE_DATASET_ID:-}" ]; then
+          echo "Live mode: dataset $GATE_DATASET_ID version $GATE_DATASET_VERSION against $AGENT_RUNTIME_ARN"
+          uv run python -m evals.agentcore_gate $COMMON \
+            --runtime-arn "$AGENT_RUNTIME_ARN" \
+            --dataset-id "$GATE_DATASET_ID" --dataset-version "$GATE_DATASET_VERSION" \
+            --evaluators $GATE_EVALUATORS \
+            --concurrency "${GATE_CONCURRENCY:-2}" \
+            --evaluation-delay-seconds "${GATE_EVALUATION_DELAY_SECONDS:-180}"
+        else
+          echo "Live mode: checked-in dataset $GATE_DATASET_FILE against $AGENT_RUNTIME_ARN"
+          uv run python -m evals.agentcore_gate $COMMON \
+            --runtime-arn "$AGENT_RUNTIME_ARN" \
+            --dataset-file "$GATE_DATASET_FILE" \
+            --evaluators $GATE_EVALUATORS \
+            --concurrency "${GATE_CONCURRENCY:-2}" \
+            --evaluation-delay-seconds "${GATE_EVALUATION_DELAY_SECONDS:-180}"
+        fi
+
+artifacts:
+  # result.json carries verdicts, metadata, and check labels only. records.json
+  # (raw patient evidence) stays in the build container and is not exported.
+  files:
+    - result.json
+  base-directory: /tmp/candidate-gate
+  discard-paths: yes

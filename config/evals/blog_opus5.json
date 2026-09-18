@@ -1,0 +1,426 @@
+{
+  "dataset_version": "mimic-audited45-v1",
+  "specialty": "general",
+  "patients": [
+    {
+      "patient_id": "0c2243d2-987b-5cbd-8eb1-170a80647693",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "28776290-4349-56d3-8c13-adc554feabb8",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "bc2a74ce-4069-5983-9423-1c175f7854d9",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "endocrinology"
+      }
+    },
+    {
+      "patient_id": "0a8eebfd-a352-522e-89f0-1d4a13abdebc",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "13df78e7-150e-5eb7-be5f-5f62b2baee87",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "158f3a39-e3d7-5e7a-93aa-57af894aadd9",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "1ab119a5-aac8-5002-9d2f-b8ff69623387",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "1bb918ba-e04e-5e7a-87ca-dbcbbb4c72c3",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "1cf9e585-806c-513b-80af-4ca565a28231",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "22a3e422-663a-561c-b305-a0c04bf42235",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "23069939-0c4c-517b-a3ec-baae0d4e3988",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "23f959c1-6ac2-562b-9cbe-c111f338e27b",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "24450f28-a039-57d8-95c9-d7ba5508ecd4",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "27980ad8-77b7-5360-b211-bf4fac9c468c",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "28dcf33b-0c52-587f-83ad-2a3270976719",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "2955c958-192a-50eb-b59d-23a29d7d374e",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "2edf1f64-2919-50e3-b98c-7a55dcfda00d",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "3886cafb-65f4-5789-9213-64678a202f82",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "3bbb6aec-41a3-5825-b6cf-422832002f96",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "42f0ed8f-d744-5edb-a05d-8e011c1fbd64",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "4365e125-c049-525a-9459-16d5e6947ad2",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "4c48ec6f-716c-5bfd-8cee-b9a6b7c6c765",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "4c9069e4-486b-53a6-8a49-b8520d49ef7e",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "4f773083-7f4d-5378-b839-c24ca1e15434",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "51d2190c-cc46-56c5-b2ea-363895cbea75",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "52462b6a-9b39-5460-9ee6-1a2d7a20394e",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "53b0f2d8-24dc-5c82-903c-1bf98e510e96",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "568cb149-804c-59e8-bdf5-816e8151cd22",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "5d0fc1da-e9bb-5b52-8e17-5930295afd2c",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "5ddeb201-5de6-5177-a116-fa82ce8ad2f2",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "5f3dcdb5-bd27-58f5-b990-859b6bcc2d73",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "5f74c4bf-681e-5123-ab4d-225c72be4f9f",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "63bce7d4-9224-5d5d-ab3c-2967424deb0d",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "71a27b6b-5e41-509f-83a8-8f47e8fb8d78",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "72d56b49-a7ee-5b9a-a679-25d1c836d3c3",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "735c5ea5-a995-5613-9c30-5421bcc2cf25",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "73eac996-32e6-5b25-96fb-7d7414180af9",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "73fb53d8-f1fa-53cd-a25c-2314caccbb99",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "740b7686-fa6d-5574-9779-f17ed7661cbe",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "74a2fd87-885b-5eca-9f8b-9141915dba51",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "752d15e2-bd27-52ed-b055-ed79edb86aba",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "76202c51-1b9d-5cc2-a7bc-3dfb2ac3ab32",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "77e10fd0-6a1c-5547-a130-fae1341acf36",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "7d61fb4e-dc5e-5b1b-a7a6-1d96a3818546",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    },
+    {
+      "patient_id": "7ec7078a-0593-5a99-9862-ebbff47fd1c5",
+      "data_source": "fhir_api",
+      "visit_context": {
+        "visit_type": "inpatient",
+        "specialty": "general"
+      }
+    }
+  ],
+  "generator_config": {
+    "config_version": "p08-steered-generator-v4",
+    "retry_cap": 3,
+    "corpus_version": "guidelines-icu-baseline-v3",
+    "nudge_tool_name": "GeneratedNudgeOutput",
+    "require_citation": true,
+    "model_id": "us.anthropic.claude-opus-5",
+    "entailment_model_id": "us.anthropic.claude-opus-5",
+    "fhir_max_pages": 50,
+    "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+  },
+  "agent": {
+    "max_nudges": 5,
+    "search_backend": "opensearch",
+    "tool_limits": {}
+  },
+  "model": {
+    "model_id": "us.anthropic.claude-opus-5",
+    "thinking_type": "adaptive",
+    "effort": "high",
+    "max_tokens": 32000,
+    "cache_system_prompt": true,
+    "budget_tokens": null,
+    "temperature": null,
+    "read_timeout": 600
+  },
+  "judge": {
+    "model_id": "us.openai.gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "max_concurrency": 1,
+    "control_cap": 5
+  },
+  "provenance_notes": [
+    "Same frozen model, agent, generator, corpus and visit-context settings as the saved historical Opus baseline.",
+    "The entailment checker stays on Opus 5 for both generator arms.",
+    "Regenerated with the current Experiment runner to capture full response and execution trace for all Layer 1 gates.",
+    "Per-call Bedrock read timeout is 600s; the historical Opus source is preserved separately."
+  ],
+  "thresholds": {
+    "latency_ms": 632967,
+    "total_tokens": 1094842,
+    "max_contract_violations": 0,
+    "min_completion_rate": 1.0,
+    "basis": "Frozen from saved Opus baseline before new comparisons: 1.25 times observed maxima."
+  },
+  "pricing_per_million_tokens": {
+    "input_tokens": 5.5,
+    "output_tokens": 27.5,
+    "cache_read_input_tokens": 0.55,
+    "cache_write_input_tokens": 6.875
+  },
+  "pricing_basis": {
+    "date": "2026-09-09",
+    "currency": "USD",
+    "region": "us-east-1",
+    "routing": "US geography cross-region inference",
+    "source": "https://aws.amazon.com/bedrock/pricing/",
+    "cache_write_ttl": "5 minutes",
+    "scope": "Rate-card estimate for measured generator usage, not a bill; failed requests may lack usage."
+  }
+}

@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src:ro
+      - ./prompts:/app/prompts:ro
+      - ./data:/app/data:ro
+      - ./guidelines:/app/guidelines:ro
+      - ./_guidelines:/app/_guidelines:ro
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+      - GUIDELINES_PATH=/app/_guidelines
+    env_file:
+      - .env
+    command: uvicorn medical_nudging.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src:ro
+      - ./frontend/public:/app/public:ro
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    command: npm run dev -- --host
+
+networks:
+  default:
+    name: medical-nudging-dev

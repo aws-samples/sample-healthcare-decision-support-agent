@@ -1,0 +1,27 @@
+# Local-file experiment: the bundled test fixtures through the orchestrator.
+# Run: uv run scripts/run_inference.py --mode local --exp-config config/exps/local_baseline.yaml
+#
+# Sections `model`, `agent`, and `opensearch_index` are runtime settings and are
+# applied over config/settings.yaml. `context` and `inference` parameterize the
+# batch run itself.
+experiment:
+  name: local_baseline
+  description: "Bundled CCDA/FHIR fixtures, adaptive thinking, full guideline access"
+
+model:
+  model_id: us.anthropic.claude-sonnet-5
+  thinking_type: adaptive
+  effort: high
+
+context:
+  condition: full   # full | summaries_only | no_guidelines
+
+inference:
+  seed: 42
+  data_sources:
+    - dir: tests/fixtures
+      samples: 2
+      visit_context:
+        visit_type: ambulatory
+        specialty: general
+        chief_complaint: "Routine follow-up"

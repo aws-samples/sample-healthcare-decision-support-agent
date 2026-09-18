@@ -1,0 +1,7 @@
+{
+  "latency_ms": 632967,
+  "total_tokens": 1094842,
+  "max_contract_violations": 0,
+  "min_completion_rate": 1.0,
+  "basis": "Frozen from saved Opus baseline before new comparisons: 1.25 times observed maxima."
+}

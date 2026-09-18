@@ -1,0 +1,39 @@
+{
+  "rule_version": "coverage-v2",
+  "rule_name": "absence-within-recorded-query-coverage",
+  "description": "Declares, per absence-claim category, which resource-type queries must appear in the recorded query coverage before absence may be treated as established (decisions 16 and 20). The deterministic verifier proves 'queries Q were executed and returned no matching resource', never 'the condition does not exist'. v2 (P-08 v4 scope, 2026-08-27): a query that stopped at the FHIR page cap no longer counts as coverage - a truncated result window cannot establish that nothing exists beyond it, which is how the v3 audit's absence-claim exclusions arose.",
+  "categories": {
+    "medication_absence": {
+      "required_resource_types": [
+        "MedicationRequest",
+        "MedicationStatement",
+        "MedicationDispense",
+        "MedicationAdministration"
+      ],
+      "keywords": ["not on", "no medication", "not prescribed", "not receiving", "off"]
+    },
+    "condition_absence": {
+      "required_resource_types": ["Condition", "Encounter"],
+      "keywords": ["no history of", "no diagnosis", "absence of", "no evidence of"]
+    },
+    "allergy_absence": {
+      "required_resource_types": ["AllergyIntolerance"],
+      "keywords": ["no allergy", "no known allergies", "no documented allergy"]
+    },
+    "observation_absence": {
+      "required_resource_types": ["Observation"],
+      "keywords": ["not measured", "no result", "never checked", "no lab"]
+    },
+    "procedure_absence": {
+      "required_resource_types": ["Procedure"],
+      "keywords": ["not performed", "no procedure", "has not undergone"]
+    }
+  },
+  "uncategorised_absence_result": "not_evaluable",
+  "page_capped_coverage_result": "not_evaluable",
+  "notes": [
+    "An absence claim whose category cannot be determined is 'not_evaluable', which drives abstention rather than a violation.",
+    "Coverage is satisfied only when every required resource type appears in the recorded queries_executed set.",
+    "v2: a required resource type whose search hit the page cap is uncovered for absence purposes - the recorded window is truncated, so its emptiness proves nothing (drives abstention, never a violation)."
+  ]
+}

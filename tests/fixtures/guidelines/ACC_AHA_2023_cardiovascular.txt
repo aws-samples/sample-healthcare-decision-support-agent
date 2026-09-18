@@ -1,0 +1,54 @@
+# ACC/AHA Guideline on Cardiovascular Risk Assessment - 2023
+
+## Section 3: Blood Pressure Management
+
+### 3.1 Blood Pressure Targets
+
+Blood pressure target is recommended to be <130/80 mmHg for most adults with hypertension.
+
+For patients with cardiovascular disease or high risk:
+- Target blood pressure should be less than 130/80 mmHg
+- Treatment should be initiated at BP >= 130/80 mmHg
+
+### 3.2 Lifestyle Modifications
+
+Lifestyle modifications are recommended for patients with elevated blood pressure:
+- Weight reduction
+- DASH dietary pattern
+- Dietary sodium reduction
+- Enhanced intake of dietary potassium
+- Physical activity
+- Moderation of alcohol intake
+
+### 3.3 Pharmacologic Treatment
+
+Initial antihypertensive therapy:
+- Thiazide diuretics
+- ACE inhibitors
+- Angiotensin receptor blockers (ARBs)
+- Calcium channel blockers
+
+## Section 5: Lipid Management
+
+### 5.1 Statin Therapy
+
+High-intensity statin therapy is recommended for patients with:
+- Clinical atherosclerotic cardiovascular disease (ASCVD)
+- LDL-C >= 190 mg/dL
+- Diabetes mellitus with multiple risk factors
+
+### 5.2 LDL-C Goals
+
+For patients with ASCVD:
+- LDL-C reduction of >= 50% is recommended
+- LDL-C goal <70 mg/dL is reasonable for very high-risk patients
+
+## Section 7: Antiplatelet Therapy
+
+### 7.1 Aspirin
+
+Low-dose aspirin (75-100 mg) is recommended for secondary prevention in patients with established ASCVD.
+
+For primary prevention:
+- Aspirin may be considered in select adults aged 40-70 years with higher ASCVD risk
+- Aspirin should not be administered routinely for primary prevention in adults >70 years

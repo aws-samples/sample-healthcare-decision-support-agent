@@ -1,0 +1,30 @@
+# HealthLake experiment: the agent queries the FHIR datastore on demand.
+# Run: uv run scripts/fhir_api/run_inference.py --exp-config config/exps/fhir_api_baseline.yaml
+#
+# Sections `model`, `agent`, and `opensearch_index` are runtime settings and are
+# applied over config/settings.yaml. `inference.fhir_api` enables the HealthLake
+# data source; leave `datastore_endpoint` empty to use the one in settings.yaml.
+experiment:
+  name: fhir_api_baseline
+  description: "Five auto-discovered HealthLake patients, adaptive thinking, full guideline access"
+
+model:
+  model_id: us.anthropic.claude-sonnet-5
+  thinking_type: adaptive
+  effort: high
+
+context:
+  condition: full
+
+inference:
+  seed: 42
+  concurrency: 1
+  fhir_api:
+    # HealthLake DatastoreEndpoint (terraform output healthlake_datastore_endpoint)
+    datastore_endpoint: ""
+    samples: 5
+    patient_ids: []  # empty = auto-discover from HealthLake
+  visit_context:
+    visit_type: ambulatory
+    specialty: general
+    chief_complaint: "Routine follow-up"

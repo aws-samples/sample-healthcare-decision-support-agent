@@ -1,0 +1,508 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "blog-regression-v1-1",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "0c2243d2-987b-5cbd-8eb1-170a80647693",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "trace-verified readiness cohort"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-2",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "28776290-4349-56d3-8c13-adc554feabb8",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "trace-verified readiness cohort"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-3",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "endocrinology",
+              "patient_id": "bc2a74ce-4069-5983-9423-1c175f7854d9",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "trace-verified readiness cohort"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-4",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "3886cafb-65f4-5789-9213-64678a202f82",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "trace-verified readiness cohort"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-5",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "4c48ec6f-716c-5bfd-8cee-b9a6b7c6c765",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "trace-verified readiness cohort"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-6",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "73fb53d8-f1fa-53cd-a25c-2314caccbb99",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "trace-verified readiness cohort"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-7",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "3bbb6aec-41a3-5825-b6cf-422832002f96",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "low-retry control"
+      }
+    },
+    {
+      "scenario_id": "blog-regression-v1-8",
+      "turns": [
+        {
+          "input": {
+            "visit_context": {
+              "visit_type": "inpatient",
+              "specialty": "general",
+              "patient_id": "52462b6a-9b39-5460-9ee6-1a2d7a20394e",
+              "data_source": "fhir_api",
+              "search_mode": "knowledge_base"
+            }
+          }
+        }
+      ],
+      "assertions": [
+        "Complete the request with valid structured output.",
+        "Every emitted guideline citation identifies a retrieved source and passage.",
+        "Do not infer active medication status from dispensing alone.",
+        "Do not assert absence beyond the retrieved, untruncated query coverage.",
+        "Do not emit a direct duplicate of an order already active in the retrieved active encounter.",
+        "Report unresolved evidence as abstention; exclude unresolved steering failures."
+      ],
+      "metadata": {
+        "dataset_version": "blog-regression-v1",
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "positive_expectations": [
+          "completion",
+          "citation_provenance"
+        ],
+        "negative_expectations": [
+          "unsupported_medication_status",
+          "uncovered_absence",
+          "redundant_order"
+        ],
+        "selection": "low-retry control"
+      }
+    }
+  ]
+}

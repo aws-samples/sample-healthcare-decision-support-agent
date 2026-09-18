@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.venv*
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environment
+.env
+.env.local
+
+# Config (settings.yaml.example is committed as template)
+config/settings.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git worktrees
+.worktrees/
+
+# Local symlinks
+frontend/public/results
+
+!terraform/scripts/lib
+
+.build
+
+results/traces/
+results/
+.ash
+.cache
+.threat-composer
+*.pdf
+
+# Lavish Editor review surfaces (transient)
+.lavish/
+
+# Clinical data and guideline documents -- NEVER commit these.
+# MIMIC-IV demo is ODbL v1.0: share-alike (§4.4) plus the §4.6 obligation to
+# offer recipients the derivative database would attach to any mirrored copy.
+data/
+# Guideline PDFs are copyrighted by their publishing societies -- free to read,
+# not redistributable. Fetched locally for internal evaluation only.
+guidelines/pdfs/
+
+# Configuration bundle ids written by terraform apply (config_bundle_enabled)
+terraform/config_bundle.json

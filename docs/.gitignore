@@ -1,0 +1,10 @@
+node_modules/
+package-lock.json
+*.docx
+package.json
+*.js
+*.mjs
+internal
+presenation
+product-feedback-review
+.obsidian

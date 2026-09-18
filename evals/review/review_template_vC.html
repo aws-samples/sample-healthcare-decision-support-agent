@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clinician Review — Guideline-Grounded CDS Nudges</title>
+<style>
+  :root {
+    --bg:        #f7f6f3;   /* warm paper */
+    --pane:      #fdfdfc;
+    --sidebar:   #f1efeb;
+    --ink:       #22252a;
+    --ink-soft:  #565c66;
+    --ink-faint: #8a9099;
+    --hair:      #ddd9d1;
+    --hair-soft: #e8e5df;
+    --accent:    #1d4ed8;   /* cobalt — active row, primary actions */
+    --accent-ink:#173db0;
+    --accent-wash:#eef2fd;
+    --urgent:    #b3261e;
+    --urgent-wash:#fbeeed;
+    --warning:   #9a6700;
+    --warning-wash:#fdf3e0;
+    --info:      #6b7280;
+    --info-wash: #eef0f2;
+    --yes:       #1d4ed8;
+    --no:        #22252a;
+    --done:      #1a7f4b;
+    --partial:   #c58a00;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --serif: "IBM Plex Serif", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ top bar ============ */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 54px; z-index: 40;
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 16px 0 12px;
+    background: var(--pane);
+    border-bottom: 1px solid var(--hair);
+  }
+  #sidebar-toggle {
+    font-family: var(--mono); font-size: 14px; line-height: 1;
+    color: var(--ink-soft); background: none;
+    border: 1px solid var(--hair); border-radius: 4px;
+    width: 32px; height: 32px; cursor: pointer; flex: 0 0 auto;
+  }
+  #sidebar-toggle:hover { color: var(--accent-ink); border-color: var(--accent); }
+  .topbar .brand {
+    display: flex; align-items: baseline; gap: 10px; min-width: 0;
+  }
+  .topbar .brand .mark {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: .08em; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 3px;
+    padding: 2px 6px; white-space: nowrap;
+  }
+  .topbar h1 {
+    font-size: 14.5px; font-weight: 600; margin: 0;
+    letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .topbar .guide-link {
+    font-size: 12.5px; color: var(--accent-ink); text-decoration: none;
+    border-bottom: 1px dotted var(--accent-ink); cursor: pointer;
+    white-space: nowrap; background: none; border-top:none; border-left:none; border-right:none;
+    font-family: var(--sans); padding: 0;
+  }
+  .topbar .guide-link:hover { border-bottom-style: solid; }
+  .view-seg {
+    display: flex; border: 1px solid var(--hair); border-radius: 5px;
+    overflow: hidden; background: var(--bg); flex: 0 0 auto;
+  }
+  .view-seg button {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase;
+    padding: 7px 14px; border: none; background: none; cursor: pointer;
+    color: var(--ink-faint);
+  }
+  .view-seg button + button { border-left: 1px solid var(--hair); }
+  .view-seg button:hover { color: var(--ink); }
+  .view-seg button.on { background: var(--accent); color: #fff; }
+  .topbar .spacer { flex: 1; }
+  .reviewer-wrap { display: flex; align-items: center; gap: 8px; }
+  .reviewer-wrap label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+  }
+  #reviewer-name {
+    font-family: var(--sans); font-size: 13.5px; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--hair);
+    border-radius: 4px; padding: 6px 10px; width: 160px;
+  }
+  #reviewer-name:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .progress-wrap { display: flex; align-items: center; gap: 10px; }
+  .progress-num {
+    font-family: var(--mono); font-size: 13px; font-weight: 600;
+    color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .progress-num .of { color: var(--ink-faint); font-weight: 400; }
+  .progress-track {
+    width: 110px; height: 4px; border-radius: 2px;
+    background: var(--hair); overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; width: 0%;
+    background: var(--accent);
+    transition: width .25s ease;
+  }
+  .progress-fill.complete { background: var(--done); }
+  #export-btn {
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    color: #fff; background: var(--accent);
+    border: 1px solid var(--accent-ink); border-radius: 4px;
+    padding: 7px 16px; cursor: pointer; white-space: nowrap;
+  }
+  #export-btn:hover { background: var(--accent-ink); }
+  #export-btn:active { transform: translateY(1px); }
+
+  /* ============ layout ============ */
+  .app {
+    display: flex; height: 100vh; padding-top: 54px;
+  }
+  .sidebar {
+    width: 300px; flex: 0 0 300px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--hair);
+    overflow-y: auto;
+    padding: 10px 0 40px;
+  }
+  .app.sidebar-collapsed .sidebar { display: none; }
+  .main {
+    flex: 1; overflow-y: auto; min-width: 0;
+    background: var(--bg);
+  }
+  .main-inner {
+    max-width: 860px; margin: 0 auto; padding: 28px 36px 80px;
+  }
+  .main-inner.wide { max-width: 1560px; }
+
+  /* ============ sidebar ============ */
+  .pt-block { margin-bottom: 4px; }
+  .pt-head {
+    padding: 12px 16px 6px;
+    display: flex; align-items: baseline; gap: 8px;
+    border-top: 1px solid var(--hair-soft);
+  }
+  .pt-block:first-child .pt-head { border-top: none; }
+  .pt-id {
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    color: var(--ink); letter-spacing: .02em;
+  }
+
+  .nrow {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%; text-align: left;
+    padding: 7px 14px 7px 18px;
+    border: none; background: none; cursor: pointer;
+    font-family: var(--sans); font-size: 13px; color: var(--ink);
+    border-left: 3px solid transparent;
+  }
+  .nrow:hover { background: rgba(29,78,216,.06); }
+  .nrow.active {
+    background: var(--accent-wash);
+    border-left-color: var(--accent);
+  }
+  .nrow .seq {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+    width: 20px; flex: 0 0 20px; text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .nrow.active .seq { color: var(--accent-ink); font-weight: 600; }
+  .nrow .ntitle {
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .nrow .utick {
+    flex: 0 0 8px; width: 8px; height: 8px; border-radius: 1.5px;
+  }
+  .utick.urgent        { background: var(--urgent); }
+  .utick.warning       { background: #e0a400; }
+  .utick.informational { background: var(--hair); border: 1px solid var(--ink-faint); }
+  .nrow .sdot {
+    flex: 0 0 9px; width: 9px; height: 9px; border-radius: 50%;
+    border: 1.5px solid var(--ink-faint); background: transparent;
+  }
+  .sdot.partial  { border-color: var(--partial); background: linear-gradient(90deg, var(--partial) 50%, transparent 50%); }
+  .sdot.complete { border-color: var(--done); background: var(--done); }
+
+  /* ============ intro / guide ============ */
+  .intro h2 {
+    font-size: 24px; font-weight: 600; letter-spacing: -.02em;
+    margin: 6px 0 4px;
+  }
+  .intro .subtitle {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--ink-faint); margin: 0 0 26px;
+  }
+  .intro section { margin-bottom: 26px; }
+  .intro h3 {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-soft); margin: 0 0 8px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--hair);
+  }
+  .intro p { margin: 8px 0; max-width: 68ch; color: var(--ink); }
+  .intro ul { margin: 8px 0; padding-left: 20px; max-width: 68ch; }
+  .intro li { margin: 4px 0; }
+  .review-steps {
+    margin: 10px 0 0; padding-left: 24px; max-width: 74ch;
+  }
+  .review-steps li {
+    margin: 0; padding: 8px 0 10px 8px;
+    border-bottom: 1px solid var(--hair-soft);
+  }
+  .review-steps strong { display: block; margin-bottom: 2px; }
+  .evidence-list { list-style: none; padding-left: 0 !important; }
+  .evidence-list li {
+    padding: 8px 0; border-bottom: 1px solid var(--hair-soft);
+  }
+  .caveat {
+    border-left: 3px solid var(--warning);
+    background: var(--warning-wash);
+    padding: 12px 16px; border-radius: 0 4px 4px 0;
+    max-width: 68ch; font-size: 14px;
+  }
+  .caveat strong { color: var(--warning); }
+  .rubric-list { list-style: none; padding: 0; margin: 10px 0 0; max-width: 74ch; }
+  .rubric-list li {
+    display: flex; gap: 14px; padding: 10px 0;
+    border-bottom: 1px solid var(--hair-soft); align-items: baseline;
+  }
+  .rubric-list .rid {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+    color: var(--accent-ink); flex: 0 0 240px;
+  }
+  .intro .start-hint {
+    margin-top: 30px; padding: 14px 18px;
+    background: var(--accent-wash); border: 1px solid #cdd9f7; border-radius: 5px;
+    font-size: 14px; max-width: 68ch;
+  }
+  .intro .start-hint kbd {
+    font-family: var(--mono); font-size: 11.5px;
+    background: var(--pane); border: 1px solid var(--hair);
+    border-bottom-width: 2px; border-radius: 3px; padding: 1px 5px;
+  }
+  #begin-btn {
+    font-family: var(--sans); font-size: 14px; font-weight: 600;
+    color: #fff; background: var(--accent); border: 1px solid var(--accent-ink);
+    border-radius: 4px; padding: 9px 20px; cursor: pointer; margin-top: 14px;
+  }
+  #begin-btn:hover { background: var(--accent-ink); }
+
+  /* ============ nudge detail (focus view) ============ */
+  .crumb {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em;
+    color: var(--ink-faint); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .crumb .sep { color: var(--hair); }
+
+  .ctx-panel {
+    border: 1px solid var(--hair); border-radius: 6px;
+    background: var(--pane); margin-bottom: 22px; overflow: hidden;
+  }
+  .ctx-toggle {
+    width: 100%; display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px; background: none; border: none; cursor: pointer;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft);
+    text-align: left;
+  }
+  .ctx-toggle:hover { color: var(--accent-ink); }
+  .ctx-toggle .chev {
+    display: inline-block; transition: transform .15s ease;
+    font-size: 10px; color: var(--ink-faint);
+  }
+  .ctx-panel.open .ctx-toggle .chev { transform: rotate(90deg); }
+  .ctx-body { display: none; padding: 0 16px 15px; }
+  .ctx-panel.open .ctx-body { display: block; }
+  .ctx-body .summary {
+    font-family: var(--serif); font-size: 14.5px; line-height: 1.65;
+    color: var(--ink); margin: 0; max-width: 72ch;
+  }
+  .ctx-body .pid-line, .pt-summary .pid-line {
+    font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+    margin: 10px 0 0; word-break: break-all;
+  }
+
+  /* ============ retrieved-evidence panels ============ */
+  .evi-item { margin: 12px 0 0; }
+  .evi-item .evi-label {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--accent-ink); margin-bottom: 4px; word-break: break-word;
+  }
+  .evi-text {
+    font-family: var(--mono); font-size: 12px; line-height: 1.55;
+    color: var(--ink); background: var(--bg);
+    border: 1px solid var(--hair-soft); border-radius: 4px;
+    padding: 10px 12px; margin: 0;
+    white-space: pre-wrap; word-break: break-word;
+    max-height: 340px; overflow-y: auto;
+  }
+  .evi-query {
+    font-family: var(--sans); font-size: 13px; color: var(--ink-soft);
+    margin: 0 0 6px;
+  }
+  .evi-query .qword { font-style: italic; color: var(--ink); }
+  .excerpt { margin: 10px 0 0; border-left: 3px solid var(--accent); }
+  .excerpt .excerpt-head {
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--accent-ink); background: var(--accent-wash);
+    padding: 6px 12px; border-radius: 0 4px 0 0;
+  }
+  .excerpt .excerpt-head .emeta { font-weight: 400; color: var(--ink-soft); }
+  .excerpt .excerpt-body {
+    font-family: var(--serif); font-size: 13px; line-height: 1.6;
+    color: var(--ink); background: var(--pane);
+    border: 1px solid var(--hair-soft); border-left: none; border-top: none;
+    border-radius: 0 0 4px 0; padding: 10px 14px; margin: 0;
+    white-space: pre-wrap; word-break: break-word;
+    max-height: 300px; overflow-y: auto;
+  }
+  .evi-note {
+    font-size: 12px; color: var(--ink-faint); margin: 10px 0 0; max-width: 72ch;
+  }
+
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .badge {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 3px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .badge.urgency-urgent        { color: var(--urgent); background: var(--urgent-wash); border: 1px solid #e6b8b5; }
+  .badge.urgency-warning       { color: var(--warning); background: var(--warning-wash); border: 1px solid #ecd39a; }
+  .badge.urgency-informational { color: var(--info); background: var(--info-wash); border: 1px solid var(--hair); }
+  .badge.category { color: var(--ink-soft); background: var(--sidebar); border: 1px solid var(--hair); }
+  .badge.grounding-guideline {
+    color: #fff; background: var(--accent); border: 1px solid var(--accent-ink);
+  }
+  .badge.grounding-reasoning {
+    color: var(--accent-ink); background: none; border: 1px dashed var(--accent-ink);
+  }
+
+  .nudge-title {
+    font-size: 22px; font-weight: 600; letter-spacing: -.015em;
+    margin: 0 0 18px; line-height: 1.3; max-width: 30ch;
+  }
+  .field { margin-bottom: 18px; }
+  .field .flabel {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+  .field .fbody { max-width: 70ch; margin: 0; }
+  .citation-box {
+    display: inline-flex; flex-direction: column; gap: 2px;
+    border-left: 3px solid var(--accent); background: var(--accent-wash);
+    padding: 9px 14px; border-radius: 0 4px 4px 0;
+    font-size: 13px; margin-top: 4px;
+  }
+  .citation-box .csrc { font-weight: 600; }
+  .citation-box .cdetail { font-family: var(--mono); font-size: 11.5px; color: var(--ink-soft); }
+
+  /* ============ rubric controls (shared) ============ */
+  .review-block {
+    margin-top: 30px; border-top: 2px solid var(--ink); padding-top: 18px;
+  }
+  .review-block > .rhead {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .review-block .rtitle {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink);
+  }
+  .review-block .rstate { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .rubric-item {
+    display: flex; align-items: center; gap: 18px;
+    padding: 13px 0; border-bottom: 1px solid var(--hair-soft);
+  }
+  .rubric-item .q { flex: 1; min-width: 0; }
+  .rubric-item .q .qlabel { font-weight: 600; font-size: 14.5px; }
+  .rubric-item .q .qtext { font-size: 13px; color: var(--ink-soft); margin-top: 1px; }
+  .seg {
+    display: flex; border: 1px solid var(--hair); border-radius: 5px;
+    overflow: hidden; flex: 0 0 auto; background: var(--pane);
+  }
+  .seg button {
+    font-family: var(--sans); font-size: 14px; font-weight: 600;
+    padding: 10px 26px; border: none; background: none; cursor: pointer;
+    color: var(--ink-faint); min-width: 84px;
+  }
+  .seg button + button { border-left: 1px solid var(--hair); }
+  .seg button:hover { background: var(--bg); color: var(--ink); }
+  .seg button.sel-y { background: var(--yes); color: #fff; }
+  .seg button.sel-n { background: var(--no); color: #fff; }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .notes-wrap { margin-top: 18px; }
+  .notes-wrap .flabel {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  .notes-field {
+    width: 100%; min-height: 110px; resize: vertical;
+    font-family: var(--sans); font-size: 14px; line-height: 1.55; color: var(--ink);
+    background: var(--pane); border: 1px solid var(--hair); border-radius: 5px;
+    padding: 11px 14px;
+  }
+  .notes-field:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+
+  /* ============ pager (shared) ============ */
+  .pager {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--hair);
+  }
+  .pager button {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 600;
+    color: var(--ink); background: var(--pane);
+    border: 1px solid var(--hair); border-radius: 4px;
+    padding: 9px 18px; cursor: pointer;
+  }
+  .pager button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-ink); }
+  .pager button:disabled { opacity: .4; cursor: default; }
+  .pager .pos {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .kbd-hint { font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint); margin-left: 8px; }
+  .pager.pager-top { margin-top: 0; padding-top: 0; border-top: none; margin-bottom: 18px; }
+
+  /* ============ by-patient view ============ */
+  .pt-summary {
+    border: 1px solid var(--hair); border-radius: 6px;
+    background: var(--pane); padding: 16px 20px; margin-bottom: 22px;
+  }
+  .pt-summary .pt-title {
+    display: flex; align-items: baseline; gap: 12px; margin: 0 0 8px;
+  }
+  .pt-summary .pt-title h2 {
+    font-size: 19px; font-weight: 600; letter-spacing: -.015em; margin: 0;
+  }
+  .pt-summary .pt-title .gsub {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+  }
+  .pt-summary .summary {
+    font-family: var(--serif); font-size: 14.5px; line-height: 1.65;
+    color: var(--ink); margin: 0; max-width: 90ch;
+  }
+  .pt-row { display: grid; gap: 16px; align-items: start; }
+  .pt-row[data-count="1"] { grid-template-columns: minmax(0, 620px); }
+  .pt-row[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 620px)); }
+  .pt-row[data-count="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pt-row[data-count="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  @media (max-width: 1200px) {
+    .pt-row[data-count="3"], .pt-row[data-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 800px) {
+    .pt-row[data-count="2"], .pt-row[data-count="3"], .pt-row[data-count="4"] { grid-template-columns: minmax(0, 1fr); }
+  }
+  .card {
+    background: var(--pane); border: 1px solid var(--hair); border-radius: 6px;
+    padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 0;
+    min-width: 0;
+  }
+  .card.flash { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .card .badges { margin-bottom: 10px; gap: 6px; }
+  .card .badge { font-size: 9.5px; padding: 2px 7px; }
+  .card .card-title {
+    font-size: 15.5px; font-weight: 600; line-height: 1.35; margin: 0 0 10px;
+    letter-spacing: -.01em;
+  }
+  .card .card-seq {
+    font-family: var(--mono); font-size: 10.5px; color: var(--ink-faint);
+    font-variant-numeric: tabular-nums; margin-left: auto; align-self: center;
+  }
+  .card .field { margin-bottom: 10px; }
+  .card .field .fbody { font-size: 13px; }
+  .card .citation-box { font-size: 12px; padding: 7px 11px; }
+  .card .review-block { margin-top: 12px; border-top: 1px solid var(--ink); padding-top: 10px; }
+  .card .review-block > .rhead { margin-bottom: 4px; }
+  .card .rubric-item { padding: 8px 0; gap: 10px; }
+  .card .rubric-item .q .qlabel { font-size: 13px; }
+  .card .rubric-item .q .qtext { display: none; }
+  .card .seg button { font-size: 12.5px; padding: 6px 14px; min-width: 56px; }
+  .card .notes-wrap { margin-top: 10px; }
+  .card .notes-field { min-height: 64px; font-size: 13px; padding: 8px 10px; }
+
+  footer {
+    margin-top: 44px; padding-top: 14px; border-top: 1px solid var(--hair);
+    font-size: 12px; color: var(--ink-faint); max-width: 70ch;
+  }
+
+  @media (max-width: 1100px) {
+    .sidebar { width: 240px; flex-basis: 240px; }
+    .main-inner { padding: 22px 22px 70px; }
+    .rubric-item { flex-direction: column; align-items: stretch; gap: 8px; }
+    .card .rubric-item { flex-direction: row; align-items: center; }
+    .topbar .brand h1 { display: none; }
+  }
+
+  @media print {
+    .topbar, .sidebar, .pager { display: none; }
+    .app { padding-top: 0; height: auto; }
+    .main { overflow: visible; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button id="sidebar-toggle" type="button" title="Show/hide patient list" aria-label="Show or hide patient list">&#9776;</button>
+  <div class="brand">
+    <span class="mark">CDS REVIEW</span>
+    <h1>Clinician Review — Guideline-Grounded CDS Nudges</h1>
+  </div>
+  <button class="guide-link" id="guide-link" type="button">Guide</button>
+  <div class="view-seg" role="group" aria-label="View mode">
+    <button type="button" id="view-focus" class="on">Focus</button>
+    <button type="button" id="view-patient">By patient</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="reviewer-wrap">
+    <label for="reviewer-name">Reviewer</label>
+    <input id="reviewer-name" type="text" placeholder="Your name" autocomplete="off">
+  </div>
+  <div class="progress-wrap">
+    <span class="progress-num"><span id="prog-n">0</span><span class="of">/<span id="prog-total">24</span></span></span>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+  <button id="export-btn" type="button">Export CSV</button>
+</header>
+
+<div class="app" id="app">
+  <nav class="sidebar" id="sidebar" aria-label="Patients and nudges"></nav>
+  <main class="main" id="main-pane"><div class="main-inner" id="main-inner"></div></main>
+</div>
+
+<script>
+const DATA = __DATA_JSON__;
+
+(function () {
+  "use strict";
+
+  const LS_PREFIX = "cds-review::" + DATA.reviewId + "::";
+  const isAnswer = (id, value) => DATA.rubric.find(r => r.id === id).options.includes(value);
+  const RUBRIC_IDS = DATA.rubric.map(r => r.id);
+  const importedRows = new Map(DATA.keys.map((key, i) => [key, DATA.rawRows[i]]));
+
+  // Blinded display labels: "Patient N" in DATA.patients order.
+  DATA.patients.forEach((p, i) => { p.display = "Patient " + (i + 1); });
+
+  // ---------- storage: answers ----------
+  function emptyAnswers() {
+    const a = {};
+    RUBRIC_IDS.forEach(id => { a[id] = ""; });
+    a.comment = "";
+    return a;
+  }
+  function loadAnswers(key) {
+    const base = emptyAnswers();
+    const imported = importedRows.get(key) || {};
+    RUBRIC_IDS.forEach(id => {
+      if (isAnswer(id, imported[id])) base[id] = imported[id];
+    });
+    if (typeof imported.comment === "string") base.comment = imported.comment;
+    try {
+      const raw = localStorage.getItem(LS_PREFIX + key);
+      if (!raw) return base;
+      const parsed = JSON.parse(raw);
+      RUBRIC_IDS.forEach(id => {
+        if (parsed[id] === "" || isAnswer(id, parsed[id])) base[id] = parsed[id];
+      });
+      if (typeof parsed.comment === "string") base.comment = parsed.comment;
+    } catch (e) { /* corrupted entry -> treat as blank */ }
+    return base;
+  }
+  function saveAnswers(key, answers) {
+    try { localStorage.setItem(LS_PREFIX + key, JSON.stringify(answers)); }
+    catch (e) { /* storage full/unavailable; keep in-memory state */ }
+  }
+  function loadReviewer() {
+    try { return localStorage.getItem(LS_PREFIX + "reviewer") || ""; }
+    catch (e) { return ""; }
+  }
+  function saveReviewer(name) {
+    try { localStorage.setItem(LS_PREFIX + "reviewer", name); }
+    catch (e) { /* ignore */ }
+  }
+
+  // ---------- storage: UI state (separate key; never touches answer keys) ----------
+  function loadUI() {
+    const base = { sidebarCollapsed: false, view: "focus", patientIdx: 0 };
+    try {
+      const raw = localStorage.getItem(LS_PREFIX + "ui");
+      if (!raw) return base;
+      const parsed = JSON.parse(raw);
+      base.sidebarCollapsed = !!parsed.sidebarCollapsed;
+      if (parsed.view === "patient" || parsed.view === "grid") base.view = "patient"; // "grid" = legacy name
+      const pi = parseInt(parsed.patientIdx, 10);
+      if (!isNaN(pi) && pi >= 0 && pi < DATA.patients.length) base.patientIdx = pi;
+    } catch (e) { /* ignore */ }
+    return base;
+  }
+  const ui = loadUI();
+  function saveUI() {
+    try { localStorage.setItem(LS_PREFIX + "ui", JSON.stringify(ui)); }
+    catch (e) { /* ignore */ }
+  }
+
+  // ---------- flatten nudges ----------
+  const flat = []; // {patient, nudge}
+  DATA.patients.forEach(p => p.nudges.forEach(n => flat.push({ patient: p, nudge: n })));
+  flat.sort((a, b) => a.nudge.seq - b.nudge.seq);
+
+  let current = -1;          // index into flat; -1 = guide screen
+  let ctxOpen = true;        // patient-context panel state, persists across nudges
+  let fhirOpen = false;      // retrieved-FHIR-data panel state, persists across nudges
+  let guideOpen = false;     // retrieved-guideline panel state, persists across nudges
+  let screen = "guide";      // "guide" | "focus" | "patient" — what the main pane shows
+
+  // ---------- helpers ----------
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+  function humanize(s) {
+    if (!s) return "";
+    const t = String(s).replace(/_/g, " ").trim();
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  function statusOf(key) {
+    const a = loadAnswers(key);
+    const set = RUBRIC_IDS.filter(id => isAnswer(id, a[id])).length;
+    if (set === RUBRIC_IDS.length) return "complete";
+    if (set > 0 || a.comment.trim() !== "") return "partial";
+    return "unreviewed";
+  }
+  function reviewedCount() {
+    let n = 0;
+    flat.forEach(f => {
+      const a = loadAnswers(f.nudge.key);
+      if (RUBRIC_IDS.every(id => isAnswer(id, a[id]))) n++;
+    });
+    return n;
+  }
+
+  // ---------- top bar ----------
+  const progN = document.getElementById("prog-n");
+  const progFill = document.getElementById("prog-fill");
+  document.getElementById("prog-total").textContent = DATA.total;
+
+  function renderProgress() {
+    const n = reviewedCount();
+    progN.textContent = n;
+    progFill.style.width = (100 * n / DATA.total) + "%";
+    progFill.classList.toggle("complete", n === DATA.total);
+  }
+
+  const reviewerInput = document.getElementById("reviewer-name");
+  reviewerInput.value = loadReviewer();
+  reviewerInput.addEventListener("input", () => saveReviewer(reviewerInput.value));
+
+  // ---------- sidebar collapse ----------
+  const app = document.getElementById("app");
+  function applySidebarState() {
+    app.classList.toggle("sidebar-collapsed", ui.sidebarCollapsed);
+  }
+  document.getElementById("sidebar-toggle").addEventListener("click", () => {
+    ui.sidebarCollapsed = !ui.sidebarCollapsed;
+    saveUI();
+    applySidebarState();
+  });
+
+  // ---------- view mode toggle ----------
+  const viewFocusBtn = document.getElementById("view-focus");
+  const viewPatientBtn = document.getElementById("view-patient");
+  function paintViewToggle() {
+    viewFocusBtn.classList.toggle("on", ui.view === "focus");
+    viewPatientBtn.classList.toggle("on", ui.view === "patient");
+  }
+  function setView(v) {
+    if (ui.view === v) { openView(); return; }
+    ui.view = v;
+    saveUI();
+    paintViewToggle();
+    openView();
+  }
+  function openView() {
+    if (ui.view === "patient") renderPatient(ui.patientIdx);
+    else selectNudge(current === -1 ? 0 : current);
+  }
+  viewFocusBtn.addEventListener("click", () => setView("focus"));
+  viewPatientBtn.addEventListener("click", () => setView("patient"));
+
+  // ---------- sidebar ----------
+  const sidebar = document.getElementById("sidebar");
+
+  function buildSidebar() {
+    const frag = document.createDocumentFragment();
+    DATA.patients.forEach((p, pIdx) => {
+      const block = document.createElement("div");
+      block.className = "pt-block";
+      const head = document.createElement("div");
+      head.className = "pt-head";
+      head.innerHTML = '<span class="pt-id">' + esc(p.display) + '</span>';
+      block.appendChild(head);
+      p.nudges.forEach(n => {
+        const idx = flat.findIndex(f => f.nudge.key === n.key);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "nrow";
+        btn.dataset.key = n.key;
+        btn.dataset.idx = idx;
+        btn.dataset.pidx = pIdx;
+        btn.innerHTML =
+          '<span class="seq">' + n.seq + '</span>' +
+          '<span class="utick ' + esc(n.urgency) + '" title="' + esc(humanize(n.urgency)) + '"></span>' +
+          '<span class="ntitle" title="' + esc(n.title) + '">' + esc(n.title) + '</span>' +
+          '<span class="sdot" title="Review status"></span>';
+        btn.addEventListener("click", () => {
+          if (ui.view === "patient") {
+            renderPatient(pIdx);
+            const card = mainInner.querySelector('.card[data-key="' + CSS.escape(n.key) + '"]');
+            if (card) {
+              card.scrollIntoView({ block: "nearest" });
+              card.classList.add("flash");
+              setTimeout(() => card.classList.remove("flash"), 1400);
+            }
+            current = idx;
+            refreshSidebar();
+          } else {
+            selectNudge(idx);
+          }
+        });
+        block.appendChild(btn);
+      });
+      frag.appendChild(block);
+    });
+    sidebar.appendChild(frag);
+  }
+
+  function refreshSidebar() {
+    sidebar.querySelectorAll(".nrow").forEach(row => {
+      const idx = parseInt(row.dataset.idx, 10);
+      const pIdx = parseInt(row.dataset.pidx, 10);
+      const isActive = screen === "patient"
+        ? pIdx === ui.patientIdx && idx === current
+        : screen === "focus" && idx === current;
+      row.classList.toggle("active", isActive);
+      const dot = row.querySelector(".sdot");
+      const st = statusOf(row.dataset.key);
+      dot.className = "sdot" + (st === "unreviewed" ? "" : " " + st);
+      dot.title = st === "complete" ? "Reviewed" : st === "partial" ? "Partially reviewed" : "Not reviewed";
+    });
+    const active = sidebar.querySelector(".nrow.active");
+    if (active) {
+      const r = active.getBoundingClientRect(), s = sidebar.getBoundingClientRect();
+      if (r.top < s.top || r.bottom > s.bottom) active.scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  // ---------- guide / intro ----------
+  const mainInner = document.getElementById("main-inner");
+  const mainPane = document.getElementById("main-pane");
+
+  function renderGuide() {
+    screen = "guide";
+    current = -1;
+    mainInner.classList.remove("wide");
+    let rubricRows = "";
+    DATA.rubric.forEach(r => {
+      rubricRows += '<li><span class="rid">' + esc(r.label) + '</span><span>' + esc(r.question) + '</span></li>';
+    });
+    mainInner.innerHTML =
+      '<div class="intro">' +
+        '<h2>Clinician review instructions</h2>' +
+        '<p class="subtitle">' + DATA.total + ' nudges &middot; ' + DATA.patients.length + ' patients &middot; expert critique pass</p>' +
+
+        '<section>' +
+          '<h3>Review each nudge</h3>' +
+          '<ol class="review-steps">' +
+            '<li><strong>Read the patient summary and retrieved data.</strong> Each patient page includes ' +
+            'the exact FHIR query results (labs with values and chart dates, medications, encounters) and ' +
+            'guideline passages the agent retrieved before writing its nudges &mdash; expand the two ' +
+            'evidence panels to see them.</li>' +
+            '<li><strong>Assess the recommendation.</strong> Use the retrieved data, the summary, and your ' +
+            'clinical judgment to assess plausibility, applicability, priority, and potential harm.</li>' +
+            '<li><strong>Answer all six rubric questions.</strong> Answer each question independently; one ' +
+            'answer does not determine another.</li>' +
+            '<li><strong>Explain critical flags.</strong> Add a note when a nudge is unacceptable, potentially ' +
+            'unsafe or misleading, not actionable, or redundant/low value. State the defect, missing evidence, ' +
+            'or preferred correction.</li>' +
+          '</ol>' +
+        '</section>' +
+
+        '<section>' +
+          '<h3>Evidence labels</h3>' +
+          '<ul class="evidence-list">' +
+            '<li><strong>Guideline-grounded</strong> means the agent cited a retrieved guideline source. The ' +
+            'retrieved passages are shown in the &ldquo;Guideline passages retrieved&rdquo; panel &mdash; ' +
+            'check whether the cited passage actually supports the claim; retrieval alone is not support.</li>' +
+            '<li><strong>Clinical reasoning</strong> means the agent did not claim guideline support. Judge the ' +
+            'nudge against the displayed patient summary and accepted clinical reasoning; citation absence alone ' +
+            'is not a defect.</li>' +
+          '</ul>' +
+        '</section>' +
+
+        '<section>' +
+          '<div class="caveat"><strong>Evidence scope.</strong> The evidence panels show everything the agent ' +
+          'retrieved &mdash; and only that. Query scope and pagination limits can omit records, so ' +
+          'chart data it did not query was not available to it and is not shown here. If a judgment needs ' +
+          'data that is absent from the panels, that absence is itself a reviewable finding: note what is ' +
+          'missing.</div>' +
+        '</section>' +
+
+        '<section>' +
+          '<h3>Rubric reference</h3>' +
+          '<ul class="rubric-list">' + rubricRows + '</ul>' +
+        '</section>' +
+
+        '<section>' +
+          '<h3>Scope</h3>' +
+          '<p>Your review supplies the clinical judgment that automated checks cannot. The checks established ' +
+          'output format, citation presence, and execution health only. This small expert-critique pass supports ' +
+          'engineering iteration; it does not estimate clinical performance or establish safety.</p>' +
+        '</section>' +
+
+        '<div class="start-hint"><strong>Review completion:</strong> review as many of the ' + DATA.total +
+          ' nudges as your time allows, give each reviewed nudge six answers and every critical flag an ' +
+          'explanatory note, then export the CSV. Answers save automatically in this browser.' +
+          '<br><button id="begin-btn" type="button">Begin review &rarr;</button>' +
+        '</div>' +
+
+        '<footer>Clinician review of retrieved evidence. Review outcomes apply only to this set.</footer>' +
+      '</div>';
+    document.getElementById("begin-btn").addEventListener("click", openView);
+    refreshSidebar();
+    mainPane.scrollTop = 0;
+  }
+
+  // ---------- shared fragments ----------
+  function citationHTML(c) {
+    if (!c) return "";
+    const parts = [];
+    if (c.section) parts.push("&sect; " + esc(c.section));
+    if (c.page_number !== undefined && c.page_number !== null && c.page_number !== "") parts.push("p. " + esc(c.page_number));
+    return '<div class="citation-box">' +
+      '<span class="csrc">' + esc(c.source || "Guideline source") + '</span>' +
+      (parts.length ? '<span class="cdetail">' + parts.join(" &middot; ") + '</span>' : "") +
+      '</div>';
+  }
+
+  // Collapsible panels showing the evidence the agent actually retrieved.
+  function fhirEvidenceHTML(p, open) {
+    const ev = p.evidence || {};
+    const queries = ev.fhirQueries || [];
+    if (!queries.length) return "";
+    let items = "";
+    queries.forEach(q => {
+      items +=
+        '<div class="evi-item">' +
+          '<div class="evi-label">' + esc(q.label) + '</div>' +
+          '<pre class="evi-text">' + esc(q.text) + '</pre>' +
+        '</div>';
+    });
+    return '<div class="ctx-panel evi-panel' + (open ? " open" : "") + '" data-panel="fhir">' +
+      '<button class="ctx-toggle" type="button" aria-expanded="' + open + '">' +
+        '<span class="chev">&#9654;</span> Patient data retrieved by the agent (' +
+        queries.length + (queries.length === 1 ? ' FHIR query' : ' FHIR queries') + ')' +
+      '</button>' +
+      '<div class="ctx-body">' + items +
+        '<p class="evi-note">These are the exact FHIR query results the agent received before ' +
+        'writing its nudges. Query scope and pagination limits can omit records; chart data ' +
+        'it did not query is not shown and was not available to it.</p>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function guidelineEvidenceHTML(p, open) {
+    const ev = p.evidence || {};
+    const searches = ev.guidelineSearches || [];
+    if (!searches.length) return "";
+    let items = "";
+    let nExcerpts = 0;
+    searches.forEach(s => {
+      items += '<div class="evi-item"><p class="evi-query">Search: ' +
+        '<span class="qword">&ldquo;' + esc(s.query) + '&rdquo;</span></p>';
+      (s.excerpts || []).forEach(x => {
+        nExcerpts++;
+        const meta = [];
+        if (x.section) meta.push("&sect; " + esc(x.section));
+        if (x.page) meta.push("p. " + esc(x.page));
+        if (x.relevance) meta.push("relevance " + esc(x.relevance));
+        items +=
+          '<div class="excerpt">' +
+            '<div class="excerpt-head">' + esc(x.source) +
+              (meta.length ? ' <span class="emeta">&middot; ' + meta.join(" &middot; ") + '</span>' : "") +
+            '</div>' +
+            '<pre class="excerpt-body">' + esc(x.text) + '</pre>' +
+          '</div>';
+      });
+      items += '</div>';
+    });
+    return '<div class="ctx-panel evi-panel' + (open ? " open" : "") + '" data-panel="guide">' +
+      '<button class="ctx-toggle" type="button" aria-expanded="' + open + '">' +
+        '<span class="chev">&#9654;</span> Guideline passages retrieved (' + nExcerpts +
+        (nExcerpts === 1 ? ' excerpt' : ' excerpts') + ')' +
+      '</button>' +
+      '<div class="ctx-body">' + items +
+        '<p class="evi-note">These are the passages returned by the agent&rsquo;s guideline search. ' +
+        'A cited source should be checked against its retrieved passage: retrieval alone does not ' +
+        'mean the passage supports the claim.</p>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // Wire every evidence panel inside rootEl; keeps open/closed state across nudges.
+  function wireEvidencePanels(rootEl) {
+    rootEl.querySelectorAll(".evi-panel").forEach(panel => {
+      const toggle = panel.querySelector(".ctx-toggle");
+      toggle.addEventListener("click", () => {
+        const nowOpen = !panel.classList.contains("open");
+        panel.classList.toggle("open", nowOpen);
+        toggle.setAttribute("aria-expanded", String(nowOpen));
+        if (panel.dataset.panel === "fhir") fhirOpen = nowOpen;
+        else if (panel.dataset.panel === "guide") guideOpen = nowOpen;
+      });
+    });
+  }
+
+  function rubricControlsHTML() {
+    let html = "";
+    DATA.rubric.forEach(r => {
+      html +=
+        '<div class="rubric-item" data-rid="' + esc(r.id) + '">' +
+          '<div class="q"><div class="qlabel">' + esc(r.label) + '</div>' +
+          '<div class="qtext">' + esc(r.question) + '</div></div>' +
+          '<div class="seg" role="group" aria-label="' + esc(r.label) + '">' +
+            r.options.map(value => '<button type="button" data-val="' + esc(value) + '">' + esc(value) + '</button>').join('') +
+          '</div>' +
+        '</div>';
+    });
+    return '<div class="review-block">' +
+      '<div class="rhead"><span class="rtitle">Your review</span>' +
+      '<span class="rstate"></span></div>' +
+      html +
+      '<div class="notes-wrap">' +
+        '<div class="flabel">Notes (required for critical flags)</div>' +
+        '<textarea class="notes-field" placeholder="Free-text critique: what is wrong, what is missing, what would you change&hellip;"></textarea>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // Wire the review controls inside rootEl to the given nudge key.
+  function wireReviewControls(rootEl, key) {
+    const answers = loadAnswers(key);
+    const stateEl = rootEl.querySelector(".rstate");
+    function paint() {
+      rootEl.querySelectorAll(".rubric-item").forEach(item => {
+        const rid = item.dataset.rid;
+        item.querySelectorAll(".seg button").forEach(b => {
+          b.classList.remove("sel-y", "sel-n");
+          if (answers[rid] === b.dataset.val) b.classList.add(b.dataset.val === "no" || b.dataset.val === "administrative" ? "sel-n" : "sel-y");
+          b.setAttribute("aria-pressed", String(answers[rid] === b.dataset.val));
+        });
+      });
+      const set = RUBRIC_IDS.filter(id => isAnswer(id, answers[id])).length;
+      if (stateEl) stateEl.textContent =
+        set === RUBRIC_IDS.length ? "complete" : set + " of " + RUBRIC_IDS.length + " answered";
+    }
+    rootEl.querySelectorAll(".rubric-item .seg button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const rid = btn.closest(".rubric-item").dataset.rid;
+        const val = btn.dataset.val;
+        answers[rid] = (answers[rid] === val) ? "" : val;   // toggle-off to clear
+        saveAnswers(key, answers);
+        paint();
+        renderProgress();
+        refreshSidebar();
+      });
+    });
+    const notesField = rootEl.querySelector(".notes-field");
+    notesField.value = answers.comment;
+    notesField.addEventListener("input", () => {
+      answers.comment = notesField.value;
+      saveAnswers(key, answers);
+      refreshSidebar();
+    });
+    paint();
+  }
+
+  function nudgeBadgesHTML(n, p, withPatient) {
+    const guideline = n.grounding === "guideline";
+    return '<div class="badges">' +
+      (withPatient ? '<span class="badge patient-chip">' + esc(p.display) + '</span>' : "") +
+      '<span class="badge urgency-' + esc(n.urgency) + '">' + esc(humanize(n.urgency)) + '</span>' +
+      '<span class="badge category">' + esc(humanize(n.category)) + '</span>' +
+      (guideline
+        ? '<span class="badge grounding-guideline">&#9670; Guideline</span>'
+        : '<span class="badge grounding-reasoning">&#9671; Reasoning</span>') +
+      '<span class="card-seq">#' + n.seq + '</span>' +
+    '</div>';
+  }
+
+  // ---------- focus view: one nudge ----------
+  function renderNudge(idx) {
+    screen = "focus";
+    mainInner.classList.remove("wide");
+    const f = flat[idx];
+    const p = f.patient, n = f.nudge;
+    const guideline = n.grounding === "guideline";
+    const patientNudgeIdx = p.nudges.findIndex(item => item.key === n.key);
+
+    mainInner.innerHTML =
+      '<div class="crumb">' +
+        '<span>' + esc(p.display).toUpperCase() + '</span><span class="sep">|</span>' +
+        '<span>Nudge ' + (patientNudgeIdx + 1) + ' of ' + p.nudges.length + '</span>' +
+      '</div>' +
+
+      '<div class="ctx-panel' + (ctxOpen ? " open" : "") + '" id="ctx-panel">' +
+        '<button class="ctx-toggle" id="ctx-toggle" type="button" aria-expanded="' + ctxOpen + '">' +
+          '<span class="chev">&#9654;</span> Patient context &mdash; ' + esc(p.display) +
+        '</button>' +
+        '<div class="ctx-body">' +
+          '<p class="summary">' + esc(p.summary || "No summary recorded for this patient.") + '</p>' +
+          '<p class="pid-line" title="Full patient id, for trace lookup">id ' + esc(p.patient_id) + '</p>' +
+        '</div>' +
+      '</div>' +
+
+      fhirEvidenceHTML(p, fhirOpen) +
+      guidelineEvidenceHTML(p, guideOpen) +
+
+      '<div class="badges">' +
+        '<span class="badge urgency-' + esc(n.urgency) + '">' + esc(humanize(n.urgency)) + '</span>' +
+        '<span class="badge category">' + esc(humanize(n.category)) + '</span>' +
+        (guideline
+          ? '<span class="badge grounding-guideline">&#9670; Guideline-grounded</span>'
+          : '<span class="badge grounding-reasoning">&#9671; Clinical reasoning</span>') +
+      '</div>' +
+
+      '<h2 class="nudge-title">' + esc(n.title) + '</h2>' +
+
+      '<div class="field"><div class="flabel">Recommendation</div><p class="fbody">' + esc(n.description) + '</p></div>' +
+      '<div class="field"><div class="flabel">Rationale</div><p class="fbody">' + esc(n.rationale) + '</p></div>' +
+      (guideline && n.citation ? '<div class="field"><div class="flabel">Citation</div>' + citationHTML(n.citation) + '</div>' : "") +
+
+      rubricControlsHTML() +
+
+      '<div class="pager">' +
+        '<button type="button" id="prev-btn"' + (idx === 0 ? " disabled" : "") + '>&larr; Prev<span class="kbd-hint">k</span></button>' +
+        '<span class="pos">' + n.seq + ' of ' + DATA.total + '</span>' +
+        '<button type="button" id="next-btn"' + (idx === flat.length - 1 ? " disabled" : "") + '>Next<span class="kbd-hint">j</span> &rarr;</button>' +
+      '</div>' +
+
+      '<footer>Clinician review of retrieved evidence. Review outcomes apply only to this set.</footer>';
+
+    // wire context toggle
+    const ctxPanel = document.getElementById("ctx-panel");
+    document.getElementById("ctx-toggle").addEventListener("click", () => {
+      ctxOpen = !ctxOpen;
+      ctxPanel.classList.toggle("open", ctxOpen);
+      document.getElementById("ctx-toggle").setAttribute("aria-expanded", String(ctxOpen));
+    });
+    wireEvidencePanels(mainInner);
+
+    wireReviewControls(mainInner, n.key);
+
+    // wire pager
+    document.getElementById("prev-btn").addEventListener("click", () => selectNudge(idx - 1));
+    document.getElementById("next-btn").addEventListener("click", () => selectNudge(idx + 1));
+
+    mainPane.scrollTop = 0;
+  }
+
+  function selectNudge(idx) {
+    if (idx < 0 || idx >= flat.length) return;
+    current = idx;
+    renderNudge(idx);
+    refreshSidebar();
+  }
+
+  // ---------- by-patient view: one patient, nudges as columns ----------
+  function patientPagerHTML(pIdx, top) {
+    return '<div class="pager' + (top ? ' pager-top' : '') + '">' +
+      '<button type="button" class="pt-prev"' + (pIdx === 0 ? " disabled" : "") + '>&larr; Prev patient<span class="kbd-hint">k</span></button>' +
+      '<span class="pos">Patient ' + (pIdx + 1) + ' of ' + DATA.patients.length + '</span>' +
+      '<button type="button" class="pt-next"' + (pIdx === DATA.patients.length - 1 ? " disabled" : "") + '>Next patient<span class="kbd-hint">j</span> &rarr;</button>' +
+    '</div>';
+  }
+
+  function renderPatient(pIdx) {
+    if (pIdx < 0 || pIdx >= DATA.patients.length) return;
+    screen = "patient";
+    ui.patientIdx = pIdx;
+    saveUI();
+    mainInner.classList.add("wide");
+    const p = DATA.patients[pIdx];
+
+    let cards = "";
+    p.nudges.forEach(n => {
+      const guideline = n.grounding === "guideline";
+      cards +=
+        '<div class="card" data-key="' + esc(n.key) + '">' +
+          nudgeBadgesHTML(n, p, false) +
+          '<h3 class="card-title">' + esc(n.title) + '</h3>' +
+          '<div class="field"><div class="flabel">Recommendation</div><p class="fbody">' + esc(n.description) + '</p></div>' +
+          '<div class="field"><div class="flabel">Rationale</div><p class="fbody">' + esc(n.rationale) + '</p></div>' +
+          (guideline && n.citation ? '<div class="field"><div class="flabel">Citation</div>' + citationHTML(n.citation) + '</div>' : "") +
+          rubricControlsHTML() +
+        '</div>';
+    });
+
+    mainInner.innerHTML =
+      patientPagerHTML(pIdx, true) +
+      '<div class="pt-summary">' +
+        '<div class="pt-title"><h2>' + esc(p.display) + '</h2>' +
+        '<span class="gsub">' + p.nudges.length + (p.nudges.length === 1 ? ' nudge' : ' nudges') + '</span></div>' +
+        '<p class="summary">' + esc(p.summary || "No summary recorded for this patient.") + '</p>' +
+        '<p class="pid-line" title="Full patient id, for trace lookup">id ' + esc(p.patient_id) + '</p>' +
+      '</div>' +
+      fhirEvidenceHTML(p, fhirOpen) +
+      guidelineEvidenceHTML(p, guideOpen) +
+      '<div class="pt-row" data-count="' + p.nudges.length + '">' + cards + '</div>' +
+      patientPagerHTML(pIdx, false) +
+      '<footer>Clinician review of retrieved evidence. Review outcomes apply only to this set.</footer>';
+
+    wireEvidencePanels(mainInner);
+    mainInner.querySelectorAll(".card").forEach(card => {
+      wireReviewControls(card, card.dataset.key);
+    });
+    mainInner.querySelectorAll(".pt-prev").forEach(b =>
+      b.addEventListener("click", () => renderPatient(pIdx - 1)));
+    mainInner.querySelectorAll(".pt-next").forEach(b =>
+      b.addEventListener("click", () => renderPatient(pIdx + 1)));
+
+    refreshSidebar();
+    mainPane.scrollTop = 0;
+  }
+
+  // ---------- keyboard ----------
+  document.addEventListener("keydown", (e) => {
+    const el = document.activeElement;
+    if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" ||
+               el.tagName === "SELECT" || el.isContentEditable)) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === "g") {
+      e.preventDefault();
+      renderGuide();
+      return;
+    }
+    const fwd = e.key === "j" || e.key === "ArrowDown" || e.key === "ArrowRight";
+    const back = e.key === "k" || e.key === "ArrowUp" || e.key === "ArrowLeft";
+    if (!fwd && !back) return;
+    e.preventDefault();
+    if (ui.view === "patient") {
+      // prev/next patient (also entered from the guide screen)
+      if (screen !== "patient") renderPatient(ui.patientIdx);
+      else renderPatient(ui.patientIdx + (fwd ? 1 : -1));
+    } else {
+      if (fwd) selectNudge(current === -1 ? 0 : current + 1);
+      else if (current > 0) selectNudge(current - 1);
+      else if (current === -1) selectNudge(0);
+    }
+  });
+
+  // ---------- export ----------
+  function csvField(v) {
+    const value = String(v == null ? "" : v);
+    const safe = /^[=+@\-\t\r]/.test(value) ? "'" + value : value;
+    return '"' + safe.replace(/"/g, '""') + '"';
+  }
+  function exportCSV() {
+    const cols = DATA.rawColumns;
+    const lines = [cols.map(csvField).join(",")];
+    DATA.rawRows.forEach((row, i) => {
+      const key = DATA.keys[i];
+      const a = loadAnswers(key);
+      const out = {};
+      cols.forEach(c => { out[c] = row[c]; });
+      RUBRIC_IDS.forEach(id => { out[id] = a[id]; });
+      out.comment = a.comment;
+      lines.push(cols.map(c => csvField(out[c])).join(","));
+    });
+    const csv = lines.join("\r\n");
+    const reviewer = (reviewerInput.value || "").trim().toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "anon";
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "nudges_review_" + reviewer + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  document.getElementById("export-btn").addEventListener("click", exportCSV);
+  document.getElementById("guide-link").addEventListener("click", renderGuide);
+
+  // ---------- boot ----------
+  buildSidebar();
+  applySidebarState();
+  paintViewToggle();
+  renderProgress();
+  renderGuide();
+})();
+</script>
+</body>
+</html>

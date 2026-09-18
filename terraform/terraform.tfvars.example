@@ -1,0 +1,108 @@
+# ============================================================================
+# Medical Nudging AgentCore - Example Configuration
+# ============================================================================
+# Copy this file to terraform.tfvars and customize the values:
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# Required: Update aws_region and aws_profile for your environment
+
+# -----------------------------------------------------------------------------
+# Required Configuration
+# -----------------------------------------------------------------------------
+
+# AWS region for deployment (REQUIRED)
+aws_region = "us-east-1"
+
+# AWS CLI profile to use (set to your profile name, or null for default)
+aws_profile = null  # Set to "your-profile-name" or leave null for default credentials
+
+# -----------------------------------------------------------------------------
+# Agent Configuration
+# -----------------------------------------------------------------------------
+
+# Agent name (alphanumeric and underscores, starts with letter, max 48 chars)
+agent_name = "MedicalNudging"
+
+# Stack name for resource naming (lowercase alphanumeric with hyphens)
+stack_name = "medical-nudging"
+
+# Agent description
+description = "Medical Nudging clinical decision support agent with OpenSearch Serverless backend"
+
+# Network mode: PUBLIC or PRIVATE
+network_mode = "PUBLIC"
+
+# -----------------------------------------------------------------------------
+# Container Configuration
+# -----------------------------------------------------------------------------
+
+# ECR repository name
+ecr_repository_name = "medical-nudging-agent"
+
+# Docker image tag
+image_tag = "latest"
+
+# -----------------------------------------------------------------------------
+# Environment Configuration
+# -----------------------------------------------------------------------------
+
+# Environment: dev, staging, or prod
+environment = "dev"
+
+# Enable JWT authentication (false for development, true for production)
+auth_enabled = false
+
+# Application log level: DEBUG, INFO, WARNING, ERROR
+log_level = "INFO"
+
+# Maximum nudges per request (1-20)
+max_nudges = 5
+
+# Bedrock model ID
+model_id = "us.anthropic.claude-sonnet-5"
+
+# -----------------------------------------------------------------------------
+# S3 Configuration
+# -----------------------------------------------------------------------------
+
+# Guidelines bucket name (will be suffixed with account ID)
+# guidelines_bucket_name = "my-guidelines"   # default: <stack_name>-guidelines
+
+# -----------------------------------------------------------------------------
+# OpenSearch Serverless Configuration
+# -----------------------------------------------------------------------------
+
+# Enable OpenSearch Serverless for guidelines search
+opensearch_enabled = true
+
+# OpenSearch index name
+opensearch_index_name = "guidelines"
+
+# Standby replicas: ENABLED or DISABLED (DISABLED saves cost for dev)
+opensearch_standby_replicas = "DISABLED"
+
+# Search backend: opensearch, ripgrep, or auto
+search_backend = "opensearch"
+
+# -----------------------------------------------------------------------------
+# Optional: Additional Environment Variables
+# -----------------------------------------------------------------------------
+# Uncomment and modify as needed
+
+# environment_variables = {
+#   AZURE_AD_TENANT_ID  = "your-tenant-id"
+#   AZURE_AD_CLIENT_ID  = "your-client-id"
+#   CUSTOM_VARIABLE     = "value"
+# }
+
+# -----------------------------------------------------------------------------
+# Optional: Versioned system prompt (AgentCore configuration bundles)
+# -----------------------------------------------------------------------------
+# Off by default. When enabled, apply creates a bundle whose version 1 is
+# prompts/orchestrator.md and writes the ids to terraform/config_bundle.json.
+# Publish later prompt versions with scripts/config_bundle.py update, gate one
+# with the candidate gate, then pin it here so CodeBuild gate runs record it.
+
+# config_bundle_enabled = true
+# config_bundle_id      = "medical_nudging_prompt-a1b2c3d4e5"
+# config_bundle_version = "11111111-1111-1111-1111-111111111111"

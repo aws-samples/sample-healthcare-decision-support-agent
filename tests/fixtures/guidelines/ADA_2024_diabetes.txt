@@ -1,0 +1,47 @@
+# ADA Standards of Care in Diabetes - 2024
+
+## Section 6: Glycemic Targets
+
+### 6.1 Assessment of Glycemic Control
+
+A1C testing is recommended for patients with diabetes:
+- At least twice yearly for patients meeting treatment goals
+- Quarterly for patients with changed therapy or not meeting goals
+
+### 6.2 Glycemic Goals
+
+HbA1c target should be <7% for most adults with diabetes who are not pregnant.
+
+A more stringent HbA1c target (such as <6.5%) may be appropriate for:
+- Selected patients with short duration of diabetes
+- Type 2 diabetes treated with lifestyle or metformin only
+- Long life expectancy
+- No significant cardiovascular disease
+
+A less stringent HbA1c target (such as <8%) may be appropriate for patients with:
+- History of severe hypoglycemia
+- Limited life expectancy
+- Advanced microvascular or macrovascular complications
+- Extensive comorbid conditions
+- Long-standing diabetes
+
+### 6.3 Hypoglycemia
+
+Hypoglycemia is the major limiting factor in glycemic management.
+It is recommended for patients at risk to have glucagon available.
+
+## Section 9: Pharmacologic Approaches to Glycemic Treatment
+
+### 9.1 Metformin
+
+Metformin is the preferred initial pharmacologic agent for type 2 diabetes.
+
+### 9.2 GLP-1 Receptor Agonists
+
+GLP-1 receptor agonists are recommended for patients with:
+- Established atherosclerotic cardiovascular disease
+- Indicators of high cardiovascular risk
+- Heart failure
+- Chronic kidney disease
+
+These medications have demonstrated cardiovascular and renal benefits.

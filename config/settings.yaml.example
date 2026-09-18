@@ -1,0 +1,92 @@
+# Medical Nudging Configuration
+# Copy this file to settings.yaml and fill in the values
+# CLI arguments override these settings
+
+# AWS Configuration
+# aws_profile: your-aws-profile  # Optional: set to use a specific profile
+aws_region: us-east-1
+
+# Agent Configuration
+agent:
+  max_nudges: 5
+  search_backend: auto  # Options: opensearch, ripgrep, auto (Terraform default: opensearch)
+  # Optional request-scoped external-call limits. Omit max_calls for no call cap.
+  tool_limits:
+    guideline_search:
+      max_calls:
+      max_results_per_call: 10
+    fhir_query:
+      max_calls:
+      max_resource_types_per_call: 4
+      max_results_per_resource: 20
+      recent_history_days:
+
+# AgentCore Configuration
+agent_arn: ""  # e.g., arn:aws:bedrock-agentcore:us-east-1:123456789012:runtime/...
+
+# WebSocket presigned-URL API (written by scripts/deploy_agentcore.sh).
+# The API key itself lives in Secrets Manager under api_key_secret_name.
+websocket_api_url: ""
+api_key_secret_name: ""
+
+
+# OpenSearch Serverless Configuration
+opensearch_endpoint: ""
+opensearch_index: guidelines
+
+# FHIR API Configuration (AWS HealthLake)
+# When enabled, pass data_source: "fhir_api" and patient_id in visit_context to
+# query HealthLake on demand instead of providing a document string.
+# data_source options: "file" (default, document string), "fhir_api" (HealthLake queries)
+# COST: a HealthLake datastore bills ~$0.27/hour (~$197/month) and cannot be
+# paused. Leave this disabled unless the datastore is deployed and in use.
+fhir_api:
+  enabled: false            # Enable the HealthLake data source
+  # DatastoreEndpoint, copied verbatim from `terraform output
+  # healthlake_datastore_endpoint`. Never assemble this URL by hand.
+  datastore_endpoint: ""
+
+# Guidelines Configuration
+guidelines_path: guidelines/
+
+
+# Model Configuration
+model:
+  model_id: us.anthropic.claude-sonnet-5
+  thinking_type: adaptive
+  effort: high
+  # Response token ceiling (thinking + output). Leaving this at the Bedrock
+  # service default truncates large structured-output payloads mid tool call.
+  max_tokens: 32000
+  read_timeout: 600  # Per-call Bedrock read timeout in seconds; client retries max_attempts=2
+  
+# Inference defaults
+inference:
+  samples: 10
+  seed: 42
+  ccda_dir: tests/fixtures
+  fhir_dir: tests/fixtures
+  output_dir: results
+  # Required by scripts/run_inference.py (unless per-source visit_context is
+  # configured under data_sources)
+  visit_context:
+    visit_type: ambulatory
+    specialty: general
+    chief_complaint: "Routine follow-up"
+  # FHIR API inference settings (used by scripts/fhir_api/)
+  fhir:
+    patient_ids: []              # Explicit patient IDs (empty = auto-discover from HealthLake)
+    visit_context:
+      visit_type: ambulatory
+      specialty: general
+      chief_complaint: "Routine follow-up"
+
+# Tracing/Observability Configuration
+tracing:
+  enabled: true            # Trace capture is enabled by default (use --no-trace to disable)
+  publish_metrics: false   # Publish to CloudWatch Metrics (--publish-metrics flag overrides)
+  # CloudWatch log group for AgentCore traces
+  # Format: /aws/bedrock-agentcore/runtimes/<agent_runtime_id>-DEFAULT (AgentCore names the
+  # group after the runtime id; `terraform output agent_runtime_id`)
+  # Example: /aws/bedrock-agentcore/runtimes/medical_nudging_MedicalNudging-AbCdEfGhIj-DEFAULT
+  cloudwatch_log_group: ""

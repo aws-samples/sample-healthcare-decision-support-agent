@@ -1,0 +1,24 @@
+#
+# BuildSpec for Lambda ingest-opensearch Docker image
+# Builds amd64 architecture for AWS Lambda runtime
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - ECR_REGISTRY=$(echo $ECR_REPO_URL | sed 's|/[^/]*$||')  # Extract registry URL
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+  build:
+    commands:
+      - echo "Building Lambda Docker image..."
+      - docker build --platform linux/amd64 -f ingest_opensearch/Dockerfile -t ingest-opensearch:latest .
+      - docker tag ingest-opensearch:latest $ECR_REPO_URL:latest
+
+  post_build:
+    commands:
+      - echo "Pushing image to ECR..."
+      - docker push $ECR_REPO_URL:latest
+      - echo "Build completed successfully"
+      - 'echo "Image URI: $ECR_REPO_URL:latest"'

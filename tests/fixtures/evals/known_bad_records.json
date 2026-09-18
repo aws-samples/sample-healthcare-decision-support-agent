@@ -1,0 +1,263 @@
+[
+  {
+    "scenario_id": "known-bad-fabricated-citation",
+    "patient_id": "synthetic-patient-0001",
+    "dataset_version": "known-bad-fixture-v1",
+    "note": "Synthetic record, no patient data. The single nudge cites a source the agent never retrieved; the evidence contract must reject it and the gate must fail.",
+    "record": {
+      "patient_id": "synthetic-patient-0001",
+      "generation_settings": {
+        "model": {
+          "model_id": "us.anthropic.claude-opus-5",
+          "thinking_type": "adaptive",
+          "effort": "high",
+          "max_tokens": 32000,
+          "cache_system_prompt": true,
+          "budget_tokens": null,
+          "temperature": null,
+          "read_timeout": 600
+        },
+        "agent": {
+          "max_nudges": 5,
+          "search_backend": "opensearch",
+          "tool_limits": {}
+        },
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        },
+        "specialty": "general",
+        "transport": {
+          "read_timeout": 600,
+          "retries": {
+            "max_attempts": 2
+          }
+        }
+      },
+      "response_status": "success",
+      "response": {
+        "status": "success",
+        "warnings": [],
+        "error": null,
+        "key_findings": [
+          "Elevated initial lactate on admission",
+          "Intravenous fluids started on admission",
+          "Repeat lactate pending in retrieved records"
+        ],
+        "patient_summary": "Adult inpatient admitted with suspected sepsis and an elevated initial lactate. Retrieved records show intravenous fluids started on admission, a repeat lactate pending, and no documented allergy to first-line antibiotics within the retrieved window. Renal function is stable across the two retrieved creatinine results.",
+        "nudges": [
+          {
+            "title": "Review repeat lactate",
+            "description": "Review lactate after initial resuscitation.",
+            "urgency": "informational",
+            "category": "clinical_monitoring",
+            "nudge_type": "standard_of_care",
+            "action_type": [
+              "assessment"
+            ],
+            "rationale": "Review lactate after initial resuscitation.",
+            "grounding": "guideline",
+            "guideline_citation": {
+              "source": "Fabricated Consensus Statement 2019",
+              "section": "Initial resuscitation",
+              "page_number": 3
+            },
+            "icd_codes": [],
+            "codes_validated": false
+          }
+        ],
+        "metadata": {
+          "model_version": "us.anthropic.claude-opus-5"
+        }
+      },
+      "trace": {
+        "system_prompt": "",
+        "user_prompt": "",
+        "tool_calls": [
+          {
+            "tool_name": "query_patient_fhir",
+            "tool_use_id": "t-fhir-1",
+            "input_params": {
+              "resource_type": "Observation"
+            },
+            "output": "1 Observation",
+            "duration_ms": 40,
+            "completed": true,
+            "success": true,
+            "error": null
+          },
+          {
+            "tool_name": "search_guidelines",
+            "tool_use_id": "t-search-1",
+            "input_params": {
+              "query": "lactate resuscitation"
+            },
+            "output": "=== Example Sepsis Guideline 2021 ===\nReview lactate after initial resuscitation.",
+            "duration_ms": 30,
+            "completed": true,
+            "success": true,
+            "error": null
+          }
+        ],
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "toolResult": {
+                  "toolUseId": "t-fhir-1",
+                  "status": "success",
+                  "content": [
+                    {
+                      "text": "1 Observation"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "toolResult": {
+                  "toolUseId": "t-search-1",
+                  "status": "success",
+                  "content": [
+                    {
+                      "text": "=== Example Sepsis Guideline 2021 ===\nReview lactate after initial resuscitation."
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "raw_response": null,
+        "token_usage": {
+          "input_tokens": 38000,
+          "output_tokens": 2000,
+          "total_tokens": 40000
+        },
+        "timing": {
+          "total_ms": 120000,
+          "tool_ms": 70,
+          "model_ms": 119930
+        }
+      },
+      "run_metrics": {
+        "input_tokens": 38000,
+        "output_tokens": 2000,
+        "total_tokens": 40000,
+        "latency_ms": 120000,
+        "tool_duration_ms": 70,
+        "tool_call_counts": {
+          "query_patient_fhir": 1,
+          "search_guidelines": 1
+        }
+      },
+      "tool_ledger": {
+        "patient_evidence": [
+          {
+            "span_id": "p1",
+            "query": "Observation?patient=synthetic&code=lactate",
+            "resource_type": "Observation",
+            "content": {
+              "resourceType": "Observation",
+              "id": "obs-1",
+              "code": {
+                "text": "Lactate"
+              },
+              "valueQuantity": {
+                "value": 3.1,
+                "unit": "mmol/L"
+              }
+            },
+            "retrieved_at": null
+          }
+        ],
+        "guideline_evidence": [
+          {
+            "span_id": "g1",
+            "chunk_id": "c1",
+            "source": "Example Sepsis Guideline 2021",
+            "content": "Review lactate after initial resuscitation.",
+            "section": "Initial resuscitation",
+            "page_number": 3
+          }
+        ],
+        "patient_evidence_fidelity": "raw_fhir",
+        "fidelity_reasons": [],
+        "absent_resource_types": []
+      },
+      "query_coverage": {
+        "queries_executed": [
+          "Observation?patient=synthetic&code=lactate"
+        ],
+        "coverage_rule_version": "synthetic",
+        "truncated_resource_types": []
+      },
+      "patient_steering_outcome": {
+        "attempts": [],
+        "generator_config": {
+          "config_version": "p08-steered-generator-v4",
+          "retry_cap": 3,
+          "corpus_version": "guidelines-icu-baseline-v3",
+          "nudge_tool_name": "GeneratedNudgeOutput",
+          "require_citation": true,
+          "model_id": "us.anthropic.claude-opus-5",
+          "entailment_model_id": "us.anthropic.claude-opus-5",
+          "fhir_max_pages": 50,
+          "custom_instructions": "Evidence discipline for this run (violations are rejected by a verifier and audited against exact evidence spans):\n1. Recommended actions: state ONLY actions the cited guideline passage itself states. Do not attribute monitoring frequencies, documentation requirements, or hold/switch/dose instructions to a guideline unless the retrieved passage text states them. If the passage supports the concern but not the specific action, recommend reviewing the guideline rather than inventing the specifics.\n2. Medication status: phrase medication claims to match the evidence. A MedicationDispense record supports 'dispensed on <date>', not 'currently on' or 'ongoing'. Assert active/ongoing status only when an active MedicationRequest or a recent MedicationAdministration is in the retrieved evidence. A status-unknown MedicationStatement supports neither active nor discontinued.\n3. Absence claims: never assert 'no documented X' outright. If a query returned no results, phrase it as coverage-relative ('no X in the retrieved records') and only when you actually queried the relevant resource types and the results were not truncated by a page cap."
+        }
+      },
+      "nudges": [
+        {
+          "nudge_idx": 0,
+          "nudge": {
+            "title": "Review repeat lactate",
+            "description": "Review lactate after initial resuscitation.",
+            "urgency": "informational",
+            "category": "clinical_monitoring",
+            "nudge_type": "standard_of_care",
+            "action_type": [
+              "assessment"
+            ],
+            "rationale": "Review lactate after initial resuscitation.",
+            "grounding": "guideline",
+            "guideline_citation": {
+              "source": "Fabricated Consensus Statement 2019",
+              "section": "Initial resuscitation",
+              "page_number": 3
+            },
+            "icd_codes": [],
+            "codes_validated": false
+          },
+          "steering_outcome": {
+            "flags": []
+          },
+          "deterministic_verifier_report_source": "steering"
+        }
+      ],
+      "excluded_nudge_count": 0,
+      "completed_at": "2026-09-14T00:00:00+00:00",
+      "runtime": {
+        "image_tag": "synthetic",
+        "stack_name": "synthetic",
+        "opensearch_index": "guidelines-icu-baseline-v3",
+        "fhir_max_pages": 50,
+        "fhir_api_enabled": true
+      },
+      "invocation": {
+        "session_id": "session-synthetic-0001"
+      }
+    }
+  }
+]

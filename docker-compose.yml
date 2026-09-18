@@ -1,0 +1,58 @@
+# ============================================================================
+# Medical Nudging Agent - Docker Compose for Local Development
+# ============================================================================
+#
+# Usage:
+#   docker-compose up -d        # Start services
+#   docker-compose down         # Stop services
+#   docker-compose logs -f      # View logs
+
+services:
+  # ============================================================================
+  # Medical Nudging Agent
+  # ============================================================================
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Use AMD64 for local Mac testing (ARM64 for production)
+      platforms:
+        - linux/amd64
+    container_name: medical-nudging-agent
+    environment:
+      # Application configuration
+      AUTH_ENABLED: "false"
+      LOG_LEVEL: DEBUG
+      MAX_NUDGES: "5"
+      # MODEL_ID is now read from config/settings.yaml (mounted as volume)
+      GUIDELINES_PATH: /app/guidelines
+
+      # AWS configuration (for Bedrock model access)
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount guidelines for local development
+      - ./guidelines:/app/guidelines:ro
+      # Mount prompts for hot-reloading during development
+      - ./prompts:/app/prompts:ro
+      # Mount config for model configuration
+      - ./config:/app/config:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/ping')"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    networks:
+      - medical-nudging-network
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  medical-nudging-network:
+    driver: bridge

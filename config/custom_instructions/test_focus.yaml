@@ -1,0 +1,7 @@
+# Test custom instructions preset
+# Used to verify custom_instructions integration with the inference pipeline
+
+instructions: |
+  Focus your analysis on the top 3 most clinically urgent findings.
+  For each nudge, explicitly state which guideline section supports your recommendation.
+  Limit your response to a maximum of 3 nudges.
